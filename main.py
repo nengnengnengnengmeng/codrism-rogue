@@ -1,10 +1,5 @@
-from pprint import pprint
-from utils import generateMap
-HEIGHT = 5
-WIDTH = 10
-FLOOR = '.'
-PLAYER = '@'
-WALL = '#'
+from utils import generateMap, movePlayer
+from const import *
 
 mapData = generateMap(HEIGHT, WIDTH)
 playerX = 1
@@ -12,7 +7,6 @@ playerY = 1
 
 while True:
     for row in mapData:
-        print(' '.join(row))
-    decision = input("움직임: ")
-    if decision == 'd':
-        if mapData[playerY][playerX+1] != '#'
+        print(''.join(row))
+    decision = input("움직임(qweasdzxc): ")
+    mapData,playerX, playerY = movePlayer(mapData, playerX, playerY, decision)
