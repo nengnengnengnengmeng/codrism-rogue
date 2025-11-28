@@ -3,7 +3,7 @@
 #define WIDTH 10
 
 int main() {
-	printf("Hello");
-
+	int arr[HEIGHT][WIDTH] = { 0 };
+	printf("%d", arr[0][0]);
 	return 0;
 }
