@@ -1,6 +1,6 @@
 from const import *
-# generateMap
-def generateMap(height, width):
+# generate_map
+def generate_map(height, width):
     map = [['.' for _ in range(width)] for _ in range(height)]
     for i in range(height):
         map[i][0] = WALL
@@ -14,8 +14,8 @@ def generateMap(height, width):
 
     return map
 
-# movePlayer
-def movePlayer(map, x, y, decision):
+# move_player
+def move_player(map, x, y, decision):
     if decision not in MOVES:
         return map, x, y
     

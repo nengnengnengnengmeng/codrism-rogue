@@ -1,8 +1,9 @@
-HEIGHT = 5
+HEIGHT = 10
 WIDTH = 10
 FLOOR = '.'
 PLAYER = '@'
 WALL = '#'
+PLAYER_INITIAL_HP = 12
 MOVES = {
     'q': (-1,-1),
     'w': (0,-1),
