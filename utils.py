@@ -15,16 +15,16 @@ def generate_map(height, width):
     return map
 
 # move_player
-def move_player(map, x, y, decision):
-    if decision not in MOVES:
-        return map, x, y
-    
-    dx, dy = MOVES[decision]
+def move_player(map, x, y, move):
+    dx, dy = move
 
-    if map[y+dy][x+dx] == WALL:
+    if dx == 0 and dy == 0:
         return map, x, y
-    
+
+    if map[y + dy][x + dx] == WALL:
+        return map, x, y
+
     map[y][x] = FLOOR
-    map[y+dy][x+dx] = PLAYER
+    map[y + dy][x + dx] = PLAYER
 
-    return map,x+dx, y+dy
+    return map, x + dx, y + dy

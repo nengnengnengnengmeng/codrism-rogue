@@ -1,19 +1,22 @@
 import threading, keyboard
 
 running = True
-last_key = None
+pressed_keys = set()
 
 def _input_listener():
     global running, last_key
 
     while running:
-        event = keyboard.read_event()
         
+        event = keyboard.read_event()
+        key = event.name
+
         if event.event_type == keyboard.KEY_DOWN:
-            last_key = event.name
+            pressed_keys.add(key)
         
         elif event.event_type == keyboard.KEY_UP:
-            last_key = None
+            if key in pressed_keys:
+                pressed_keys.remove(key)
 
 def start_listener():
     listener_thread = threading.Thread(target=_input_listener, daemon=True)
