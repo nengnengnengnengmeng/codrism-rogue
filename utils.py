@@ -19,6 +19,8 @@ def generate_map():
         for col in range(3):
             if col == 2:
                 cell_w = MAP_WIDTH - (cell_w * 2)
+            else:
+                cell_w = MAP_WIDTH // 3
             cell_x = col * cell_w # 0, 26, 52
             cell_y = row * cell_h # 0, 7, 14
             room_w = rand.randint(2, cell_w - 2) # 2-24
