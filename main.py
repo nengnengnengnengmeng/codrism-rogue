@@ -4,7 +4,7 @@ from const import *
 import input_handler
 import os, keyboard as kb, time, sys, msvcrt
 
-TPS = 10
+TPS = 5
 TICK_TIME = 1 / TPS
 
 map_data = generate_map(HEIGHT, WIDTH)
