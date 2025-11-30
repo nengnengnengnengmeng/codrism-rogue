@@ -2,8 +2,7 @@ from utils import generate_map, move_player
 from screens import start_screen, get_player_name
 from const import *
 import input_handler
-import os, keyboard as kb, time, sys, msvcrt
-from datetime import datetime
+import os, time
 from renderer import draw
 from player import Player
 
@@ -28,8 +27,6 @@ input_handler.start_listener()
 last_tick = time.time()
 
 while True:
-    now = datetime.now()
-    clock = now.strftime('%I:%M')
     # 틱 계산
     now = time.time()
     delta = now - last_tick
@@ -49,10 +46,9 @@ while True:
             mx, my = MOVES[key]
             dx += mx
             dy += my
-
             decision = key
 
-    map_data,player.x, player.y = move_player(map_data, player.x, player.y, (dx, dy))
+    player.move(dx, dy, map_data)
 
     # 화면 출력
     draw(map_data, player, message)

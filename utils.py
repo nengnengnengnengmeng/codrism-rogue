@@ -13,18 +13,3 @@ def generate_map(height, width):
     map[1][1] = PLAYER
 
     return map
-
-# move_player
-def move_player(map, x, y, move):
-    dx, dy = move
-
-    if dx == 0 and dy == 0:
-        return map, x, y
-
-    if map[y + dy][x + dx] == WALL:
-        return map, x, y
-
-    map[y][x] = FLOOR
-    map[y + dy][x + dx] = PLAYER
-
-    return map, x + dx, y + dy
