@@ -13,7 +13,7 @@ map_data = generate_map()
 
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()
-player = Player(1, 1, "{player_name}")
+player = Player(3, 3, "{player_name}")
 message = "Hello {player.name}"
 
 # 입력 스레드 시작
