@@ -9,11 +9,11 @@ from player import Player
 TPS = 5
 TICK_TIME = 1 / TPS
 
-map_data = generate_map()
+map_data, rooms = generate_map()
 
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()
-player = Player(3, 3, "{player_name}")
+player = Player(rooms[0].x1+1, rooms[0].y1+1, "{player_name}")
 message = "Hello {player.name}"
 
 # 입력 스레드 시작

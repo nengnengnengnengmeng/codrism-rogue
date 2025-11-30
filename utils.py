@@ -35,4 +35,6 @@ def generate_map():
             for x in range(room.x1, room.x2):
                 map[y][x] = FLOOR
 
-    return map
+    map[rooms[0].y1+1][rooms[0].x1+1] = PLAYER
+
+    return map, rooms
