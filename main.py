@@ -3,23 +3,22 @@ from screens import start_screen, get_player_name
 from const import *
 import input_handler
 import os, keyboard as kb, time, sys, msvcrt
+from datetime import datetime
+from renderer import draw
+from player import Player
 
 TPS = 5
 TICK_TIME = 1 / TPS
 
-map_data = generate_map(HEIGHT, WIDTH)
-player_x = 1
-player_y = 1
-message = "Hello hello"
-player_level = 1
-player_max_hp = PLAYER_INITIAL_HP
-player_hp = player_max_hp
+map_data = generate_map(MAP_HEIGHT, MAP_WIDTH)
+player = Player(1, 1, "{player_name}")
+message = "Hello {player.name}"
 
 dx = 0
 dy = 0
 
 #start_screen() # 나중에 활성화
-#playerName = get_player_name()
+#player_name = get_player_name()
 
 
 # 입력 스레드 시작
@@ -29,7 +28,8 @@ input_handler.start_listener()
 last_tick = time.time()
 
 while True:
-    
+    now = datetime.now()
+    clock = now.strftime('%I:%M')
     # 틱 계산
     now = time.time()
     delta = now - last_tick
@@ -52,13 +52,7 @@ while True:
 
             decision = key
 
-    map_data,player_x, player_y = move_player(map_data, player_x, player_y, (dx, dy))
+    map_data,player.x, player.y = move_player(map_data, player.x, player.y, (dx, dy))
 
-    # 화면 표시
-    buffer = ""
-    buffer+= "\033[H"
-    buffer+= f"{message}\n"
-    for row in map_data:
-        buffer += ''.join(row) + "\n"
-    buffer += f"\nLevel:{player_level}    Hits:{player_hp}({player_max_hp})    Str:    Gold:    Armor:    \n"
-    print(buffer, end="")
+    # 화면 출력
+    draw(map_data, player, message)
