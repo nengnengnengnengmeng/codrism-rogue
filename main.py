@@ -1,5 +1,5 @@
 from utils import generate_map
-from screens import start_screen, get_player_name
+#from screens import start_screen, get_player_name
 from const import *
 import input_handler
 import os, time

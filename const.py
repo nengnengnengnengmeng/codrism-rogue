@@ -4,6 +4,7 @@ MAP_HEIGHT = 21
 MAP_WIDTH = 80
 FLOOR = '.'
 PLAYER = '@'
+VOID = ' '
 WALL = '#'
 PLAYER_INITIAL_HP = 12
 MOVES = {

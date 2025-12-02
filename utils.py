@@ -9,7 +9,7 @@ class Room():
 
 # generate_map
 def generate_map():
-    map = [[WALL for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
+    map = [[VOID for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
     
     rooms = []
     cell_w = MAP_WIDTH // 3 # 26
@@ -34,6 +34,10 @@ def generate_map():
         for y in range(room.y1, room.y2):
             for x in range(room.x1, room.x2):
                 map[y][x] = FLOOR
+                for i in range(-1, 2):
+                    for j in range(-1, 2):
+                        if map[y+i][x+j] == VOID:
+                            map[y+i][x+j] = WALL
 
     map[rooms[0].y1+1][rooms[0].x1+1] = PLAYER
 
