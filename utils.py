@@ -23,21 +23,23 @@ def generate_map():
                 cell_w = MAP_WIDTH - cell_x
             else:
                 cell_w = MAP_WIDTH // 3
+
             room_w = rand.randint(2, cell_w - 2) # 2-24
             room_h = rand.randint(2, cell_h - 2) # 2-5
             room_x = cell_x + rand.randint(1, cell_w - room_w - 1) # 1-23
             room_y = cell_y + rand.randint(1, cell_h - room_h - 1) # 1-4
+            
+            
+
             room = Room(room_x, room_y, room_x + room_w, room_y + room_h)
             rooms.append(room)
-
-    for room in rooms:
-        for y in range(room.y1, room.y2):
-            for x in range(room.x1, room.x2):
-                map[y][x] = FLOOR
-                for i in range(-1, 2):
-                    for j in range(-1, 2):
-                        if map[y+i][x+j] == VOID:
-                            map[y+i][x+j] = WALL
+            for y in range(room.y1, room.y2):
+                for x in range(room.x1, room.x2):
+                    map[y][x] = FLOOR
+                    for i in range(-1, 2):
+                        for j in range(-1, 2):
+                            if map[y+i][x+j] == VOID:
+                                map[y+i][x+j] = WALL
 
     map[rooms[0].y1+1][rooms[0].x1+1] = PLAYER
 
