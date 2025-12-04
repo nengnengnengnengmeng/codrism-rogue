@@ -24,12 +24,10 @@ def generate_map():
             else:
                 cell_w = MAP_WIDTH // 3
 
-            room_w = rand.randint(2, cell_w - 2) # 2-24
-            room_h = rand.randint(2, cell_h - 2) # 2-5
-            room_x = cell_x + rand.randint(1, cell_w - room_w - 1) # 1-23
-            room_y = cell_y + rand.randint(1, cell_h - room_h - 1) # 1-4
-            
-            
+            room_w = rand.randint(2, cell_w - 4) # 2-22
+            room_h = rand.randint(2, cell_h - 4) # 2-3
+            room_x = cell_x + rand.randint(1, cell_w - room_w - 2) # 1-21
+            room_y = cell_y + rand.randint(1, cell_h - room_h - 2) # 1-2
 
             room = Room(room_x, room_y, room_x + room_w, room_y + room_h)
             rooms.append(room)

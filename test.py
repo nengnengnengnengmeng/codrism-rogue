@@ -8,3 +8,4 @@ message = "message"
 
 while True:
     draw(map, player, message)
+    
