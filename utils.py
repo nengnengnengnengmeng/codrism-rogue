@@ -11,6 +11,8 @@ class Room():
         self.x2 = x + w
         self.y2 = y + h
         self.grid = (row, col)
+        self.howmanydoorsarethere = 0
+        self.wheresarethedoors = []
 
     def center(self):
         cx = (self.x1 + self.x2) // 2
@@ -60,7 +62,11 @@ def generate_rooms():
                 map_data[y][new_room.x1] = VERTICAL_WALL
                 map_data[y][new_room.x2 - 1] = VERTICAL_WALL
 
-    connect_rooms(map_data, rooms)
+    for col in range(ROOMS_COL):
+        for row in range(ROOMS_ROW):
+            current_room = rooms[(row, col)]
+            connect_rooms(map_data, rooms, current_room)
+
     return map_data, rooms
 
 # get_door_location
@@ -80,54 +86,103 @@ def get_door_location(room, direction):
     return (x, y)
     
 #connect_rooms
-def connect_rooms(map_data, rooms):
-    for col in range(ROOMS_COL):
-        for row in range(ROOMS_ROW):
-            current_room = rooms[row, col]
-            if col < ROOMS_COL - 1:
-                target_room = rooms[row, col+1]
+def connect_rooms(map_data, rooms, current_room):
+    current_room = current_room
+    row, col = current_room.grid
+    if col < ROOMS_COL - 1:
+        if rand.random() < 0.7:
+            target_room = rooms[row, col+1]
 
-                x1, y1 = get_door_location(current_room, 'E')
-                x2, y2 = get_door_location(target_room, 'W')
+            current_room.howmanydoorsarethere += 1
+            target_room.howmanydoorsarethere += 1
 
-                map_data[y1][x1] = DOOR
-                map_data[y2][x2] = DOOR
+            x1, y1 = get_door_location(current_room, 'E')
+            x2, y2 = get_door_location(target_room, 'W')
+            
+            map_data[y1][x1] = DOOR
+            map_data[y2][x2] = DOOR
 
-                mid_x = rand.randint(x1+1, x2-1)
+            current_room.wheresarethedoors.append('E')
+            target_room.wheresarethedoors.append('W')
 
-                for x in range(x1+1, mid_x + 1):
-                    map_data[y1][x] = CORRIDOR
+            make_corridor(map_data, x1, y1, x2, y2, 'H')
 
-                if y1 < y2:
-                    for y in range(y1, y2 + 1):
-                        map_data[y][mid_x] = CORRIDOR
-                else:  
-                    for y in range(y2, y1 + 1):
-                        map_data[y][mid_x] = CORRIDOR
+    if row < ROOMS_ROW - 1:
+        if rand.random() < 0.7:
+            target_room = rooms[row+1, col]
 
-                for x in range(mid_x, x2):
-                    map_data[y2][x] = CORRIDOR
+            current_room.howmanydoorsarethere += 1
+            target_room.howmanydoorsarethere += 1
 
-            if row < ROOMS_ROW - 1:
-                target_room = rooms[row+1, col]
+            x1, y1 = get_door_location(current_room, 'S')
+            x2, y2 = get_door_location(target_room, 'N')
 
-                x1, y1 = get_door_location(current_room, 'S')
-                x2, y2 = get_door_location(target_room, 'N')
+            map_data[y1][x1] = DOOR
+            map_data[y2][x2] = DOOR
 
-                map_data[y1][x1] = DOOR
-                map_data[y2][x2] = DOOR
+            current_room.wheresarethedoors.append('S')
+            target_room.wheresarethedoors.append('N')
 
-                mid_y = rand.randint(y1+1, y2-1)
+            make_corridor(map_data, x1, y1, x2, y2, 'V')
 
-                for y in range(y1+1, mid_y + 1):
-                    map_data[y][x1] = CORRIDOR
+    if current_room.howmanydoorsarethere <= 1:
+        if col < ROOMS_COL - 1 and 'E' not in current_room.wheresarethedoors:
+            target_room = rooms[row, col+1]
 
-                if x1 < x2:
-                    for x in range(x1, x2 + 1):
-                        map_data[mid_y][x] = CORRIDOR
-                else:  
-                    for x in range(x2, x1 + 1):
-                        map_data[mid_y][x] = CORRIDOR
+            current_room.howmanydoorsarethere += 1
+            target_room.howmanydoorsarethere += 1
 
-                for y in range(mid_y, y2):
-                    map_data[y][x2] = CORRIDOR
+            x1, y1 = get_door_location(current_room, 'E')
+            x2, y2 = get_door_location(target_room, 'W')
+            
+            map_data[y1][x1] = DOOR
+            map_data[y2][x2] = DOOR
+
+            make_corridor(map_data, x1, y1, x2, y2, 'H')
+
+        elif row < ROOMS_ROW - 1 and 'S' not in current_room.wheresarethedoors:
+            target_room = rooms[row+1, col]
+
+            current_room.howmanydoorsarethere += 1
+            target_room.howmanydoorsarethere += 1
+
+            x1, y1 = get_door_location(current_room, 'S')
+            x2, y2 = get_door_location(target_room, 'N')
+
+            map_data[y1][x1] = DOOR
+            map_data[y2][x2] = DOOR
+
+            make_corridor(map_data, x1, y1, x2, y2, 'V')
+
+def make_corridor(map_data, x1, y1, x2, y2, direction):
+    if direction == 'H':
+        mid_x = rand.randint(x1+1, x2-1)
+
+        for x in range(x1+1, mid_x + 1):
+            map_data[y1][x] = CORRIDOR
+
+        if y1 < y2:
+            for y in range(y1, y2 + 1):
+                map_data[y][mid_x] = CORRIDOR
+        else:  
+            for y in range(y2, y1 + 1):
+                map_data[y][mid_x] = CORRIDOR
+
+        for x in range(mid_x, x2):
+            map_data[y2][x] = CORRIDOR
+
+    elif direction == 'V':
+        mid_y = rand.randint(y1+1, y2-1)
+
+        for y in range(y1+1, mid_y + 1):
+            map_data[y][x1] = CORRIDOR
+
+        if x1 < x2:
+            for x in range(x1, x2 + 1):
+                map_data[mid_y][x] = CORRIDOR
+        else:  
+            for x in range(x2, x1 + 1):
+                map_data[mid_y][x] = CORRIDOR
+
+        for y in range(mid_y, y2):
+            map_data[y][x2] = CORRIDOR
