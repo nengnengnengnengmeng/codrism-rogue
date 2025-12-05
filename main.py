@@ -13,7 +13,7 @@ map_data, rooms = generate_map()
 
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()
-player = Player(rooms[0,0].x1+1, rooms[0,0].y1+1, "{player_name}")
+player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "{player_name}")
 message = "Hello {player.name}"
 
 # 입력 스레드 시작
