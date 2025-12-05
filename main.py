@@ -1,4 +1,4 @@
-from utils import generate_map
+from utils import generate_rooms, connect_rooms
 from screens import start_screen, get_player_name
 from const import *
 import input_handler
@@ -9,7 +9,7 @@ from player import Player
 TPS = 5
 TICK_TIME = 1 / TPS
 
-map_data, rooms = generate_map()
+map_data, rooms = generate_rooms()
 
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()

@@ -1,4 +1,5 @@
 from datetime import datetime, timezone, timedelta
+from const import PLAYER
 
 def draw(map_data, player, message):
     buffer = ""
@@ -6,8 +7,12 @@ def draw(map_data, player, message):
     buffer+= "\033[H"
     buffer += f"{message}\033[K\n"
 
-    for row in map_data:
-        buffer += ''.join(row) + "\n"
+    for y, row in enumerate(map_data):
+        if y == player.y:
+            temp_row = row[:player.x] + [PLAYER] + row[player.x+1:]
+            buffer += ''.join(temp_row) + "\n"
+        else:
+            buffer += ''.join(row) + "\n"
 
     kst = timezone(timedelta(hours=9))
     now = datetime.now(kst)

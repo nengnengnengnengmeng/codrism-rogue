@@ -6,6 +6,9 @@ FLOOR = '.'
 PLAYER = '@'
 VOID = ' '
 WALL = '#'
+DOOR = '+'
+CORRIDOR = '='
+
 PLAYER_INITIAL_HP = 12
 MOVES = {
     'w': (0, -1),

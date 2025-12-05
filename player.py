@@ -10,10 +10,9 @@ class Player:
         self.level = 1
 
     def move(self, dx, dy, map_data):
-        if map_data[self.y + dy][self.x + dx] != WALL:
-            map_data[self.y][self.x] = FLOOR
+        ny = self.y + dy
+        nx = self.x + dx
+        if map_data[ny][nx] != WALL and map_data[ny][nx] != VOID:
             self.x += dx
             self.y += dy
-            map_data[self.y][self.x] = PLAYER
-            
         return map_data
