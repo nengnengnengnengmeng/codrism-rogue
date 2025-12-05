@@ -7,12 +7,12 @@ import os, time
 from renderer import draw
 from player import Player
 
-TPS = 5
+TPS = 8
 TICK_TIME = 1 / TPS
 ROOMS_ROW = 3
 ROOMS_COL = 3
 
-map_data, rooms = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
+map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
 
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()

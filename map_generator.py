@@ -1,5 +1,6 @@
 from const import *
 import random as rand   
+import logging
 
 class Room:
     def __init__(self, x, y, w, h, row, col):
@@ -9,6 +10,7 @@ class Room:
         self.y2 = y + h
         self.grid = (row, col)
         self.door_locations = []
+        self.parent = self.grid
 
     def center(self):
         cx = (self.x1 + self.x2) // 2
@@ -26,6 +28,7 @@ class MapGenerator:
         self.col = col
         self.map_data = []
         self.rooms = {}
+        self.parents = {}
 
     def generate(self):
         self.map_data = [[VOID for _ in range(self.width)] for _ in range(self.height)]
@@ -34,7 +37,18 @@ class MapGenerator:
 
         self._connect_rooms()
 
-        return self.map_data, self.rooms
+        return self.map_data, self.rooms, self.parents
+
+    def _find_parent(self, room):
+        if room != self.parents[room]:
+            self.parents[room] = self._find_parent(self.parents[room])
+        return self.parents[room]
+    
+    def _change_parent(self, current_room, target_room):
+        current_parent = self._find_parent(current_room)
+        target_parent = self._find_parent(target_room)
+        if current_parent != target_parent:
+            self.parents[current_parent] = target_parent
 
     def _place_rooms(self):
         cell_w = self.width // self.col
@@ -60,6 +74,7 @@ class MapGenerator:
 
                 new_room = Room(room_x, room_y, room_w, room_h, row, col)
                 self.rooms[(row, col)] = new_room
+                self.parents[(row, col)] = (row, col)
                 self._draw_room(new_room)
 
     def _draw_room(self, new_room):
@@ -71,16 +86,18 @@ class MapGenerator:
         self.map_data[new_room.y1][new_room.x2 - 1] = RIGHT_TOP_WALL
         self.map_data[new_room.y2 - 1][new_room.x1] = LEFT_BOTTOM_WALL
         self.map_data[new_room.y2 - 1][new_room.x2 - 1] = RIGHT_BOTTOM_WALL
+
         for x in range(new_room.x1 + 1, new_room.x2 - 1):
             self.map_data[new_room.y1][x] = HORIZONTAL_WALL
             self.map_data[new_room.y2 - 1][x] = HORIZONTAL_WALL
+
         for y in range(new_room.y1 + 1, new_room.y2 - 1):
             self.map_data[y][new_room.x1] = VERTICAL_WALL
             self.map_data[y][new_room.x2 - 1] = VERTICAL_WALL
 
     def _connect_rooms(self):
-        for col in range(self.col):
-            for row in range(self.row):
+        for row in range(self.row):
+            for col in range(self.col):
                 current_room = self.rooms[(row, col)]
                 row, col = current_room.grid
                 if col < self.col - 1 and rand.random() < 0.6:
@@ -89,6 +106,7 @@ class MapGenerator:
                     door_loc_target = self._get_door_location(target_room, 'W')
                     current_room.door_locations.append(door_loc_current)
                     target_room.door_locations.append(door_loc_target)
+                    self._change_parent(current_room.grid, target_room.grid)
                     self._draw_corridor(door_loc_current, door_loc_target, 'H')
                 if row < self.row - 1 and rand.random() < 0.6:
                     target_room = self.rooms[(row + 1, col)]
@@ -96,6 +114,7 @@ class MapGenerator:
                     door_loc_target = self._get_door_location(target_room, 'N')
                     current_room.door_locations.append(door_loc_current)
                     target_room.door_locations.append(door_loc_target)
+                    self._change_parent(current_room.grid, target_room.grid)
                     self._draw_corridor(door_loc_current, door_loc_target, 'V')
 
     def _get_door_location(self, room, direction):
@@ -119,32 +138,20 @@ class MapGenerator:
         x2, y2 = door2
         if direction == 'H':
             mid_x = rand.randint(x1+1, x2-1)
-
-            for x in range(x1+1, mid_x + 1):
-                self.map_data[y1][x] = CORRIDOR
-
-            if y1 < y2:
-                for y in range(y1, y2 + 1):
-                    self.map_data[y][mid_x] = CORRIDOR
-            else:  
-                for y in range(y2, y1 + 1):
-                    self.map_data[y][mid_x] = CORRIDOR
-
-            for x in range(mid_x, x2):
-                self.map_data[y2][x] = CORRIDOR
+            self._draw_line(x1+1, y1, mid_x, y1)
+            self._draw_line(mid_x, y1, mid_x, y2)
+            self._draw_line(mid_x, y2, x2-1, y2)
 
         elif direction == 'V':
             mid_y = rand.randint(y1+1, y2-1)
+            self._draw_line(x1, y1+1, x1, mid_y)
+            self._draw_line(x1, mid_y, x2, mid_y)
+            self._draw_line(x2, mid_y, x2, y2-1)
 
-            for y in range(y1+1, mid_y + 1):
+    def _draw_line(self, x1, y1, x2, y2):
+        if x1 == x2:
+            for y in range(min(y1, y2), max(y1, y2) + 1):
                 self.map_data[y][x1] = CORRIDOR
-
-            if x1 < x2:
-                for x in range(x1, x2 + 1):
-                    self.map_data[mid_y][x] = CORRIDOR
-            else:  
-                for x in range(x2, x1 + 1):
-                    self.map_data[mid_y][x] = CORRIDOR
-
-            for y in range(mid_y, y2):
-                self.map_data[y][x2] = CORRIDOR
+        elif y1 == y2:
+            for x in range(min(x1, x2), max(x1, x2) + 1):
+                self.map_data[y1][x] = CORRIDOR
