@@ -1,20 +1,16 @@
 from const import *
 import random as rand
 class Room():
-    def __init__(self, x1, y1, x2, y2):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+    def __init__(self, x, y, w, h):
+        self.x1 = x
+        self.y1 = y
+        self.x2 = x + w
+        self.y2 = y + h
 
-def connetc_rooms(map_data, room1, room2):
-    yy = rand.randint(room1.y1, room2.y2)
-    for x in range(room1.x2, room2.x1-((room2.x1-room1.x2)//2)):
-        map_data[yy][x] = FLOOR
-    yyy = rand.randint(room2.y1, room2.y2)
-    for y in range(yy, yyy):
-        map_data[y][x] = FLOOR
-    
+    def center(self):
+        cx = (self.x1 + self.x2) // 2
+        cy = (self.y1 + self.y2) // 2
+        return (cx, cy)
 
 # generate_map
 def generate_map():
@@ -26,42 +22,33 @@ def generate_map():
 
     for row in range(3):
         for col in range(3):
-            cell_x = col * cell_w # 0, 26, 52
-            cell_y = row * cell_h # 0, 7, 14
-            if col == 2:
-                cell_w = MAP_WIDTH - cell_x
-            else:
-                cell_w = MAP_WIDTH // 3
+            cell_x = col * cell_w if col < 2 else MAP_WIDTH - cell_w # 0, 26, 52
+            cell_y = row * cell_h if row < 2 else MAP_HEIGHT - cell_h # 0, 7, 14
 
-            room_w = rand.randint(2, cell_w - 3) # 2-23
-            room_h = rand.randint(2, cell_h - 3) # 2-4
-            room_x = cell_x + rand.randint(1, cell_w - room_w - 2) # 1-21
-            room_y = cell_y + rand.randint(1, cell_h - room_h - 2) # 1-2
+            max_w = cell_w - 1
+            max_h = cell_h - 1
 
-            room = Room(room_x, room_y, room_x + room_w, room_y + room_h)
-            rooms[(row, col)] = room
-            for y in range(room.y1, room.y2):
-                for x in range(room.x1, room.x2):
+            # !!!!이전엔 벽을 크기에서 제외했으나 벽까지 포함하도록 변경!!!
+            room_w = rand.randint(4, max_w)
+            room_h = rand.randint(4, max_h)
+
+            diff_w = max_w - room_w
+            diff_h = max_h - room_h
+            
+            room_x = cell_x + rand.randint(0, diff_w)
+            room_y = cell_y + rand.randint(0, diff_h)
+
+            new_room = Room(room_x, room_y, room_w, room_h)
+            rooms[(row, col)] = new_room
+            
+            for y in range(new_room.y1, new_room.y2):
+                for x in range(new_room.x1, new_room.x2):
+                    map[y][x] = WALL
+
+            for y in range(new_room.y1 + 1, new_room.y2 - 1):
+                for x in range(new_room.x1 + 1, new_room.x2 - 1):
                     map[y][x] = FLOOR
-                    for i in range(-1, 2):
-                        for j in range(-1, 2):
-                            if map[y+i][x+j] == VOID:
-                                map[y+i][x+j] = WALL
 
-    map[rooms[0,0].y1+1][rooms[0,0].x1+1] = PLAYER
-    
-    hallways = []
-    for row in range(3):
-        for col in range(2):
-            hallways.append(((row, col), (row, col+1)))
-
-    for row in range(2):
-        for col in range(3):
-            hallways.append(((row, col), (row+1, col)))
-
-    for (start, end) in hallways:
-        room1 = rooms[start]
-        room2 = rooms[end]
-        connetc_rooms(map, room1, room2)
+    map[rooms[0,0].y1+2][rooms[0,0].x1+2] = PLAYER
 
     return map, rooms
