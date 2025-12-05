@@ -47,11 +47,18 @@ def generate_rooms():
             
             for y in range(new_room.y1, new_room.y2):
                 for x in range(new_room.x1, new_room.x2):
-                    map_data[y][x] = WALL
-
-            for y in range(new_room.y1 + 1, new_room.y2 - 1):
-                for x in range(new_room.x1 + 1, new_room.x2 - 1):
                     map_data[y][x] = FLOOR
+
+            map_data[new_room.y1][new_room.x1] = LEFT_TOP_WALL
+            map_data[new_room.y1][new_room.x2 - 1] = RIGHT_TOP_WALL
+            map_data[new_room.y2 - 1][new_room.x1] = LEFT_BOTTOM_WALL
+            map_data[new_room.y2 - 1][new_room.x2 - 1] = RIGHT_BOTTOM_WALL
+            for x in range(new_room.x1 + 1, new_room.x2 - 1):
+                map_data[new_room.y1][x] = HORIZONTAL_WALL
+                map_data[new_room.y2 - 1][x] = HORIZONTAL_WALL
+            for y in range(new_room.y1 + 1, new_room.y2 - 1):
+                map_data[y][new_room.x1] = VERTICAL_WALL
+                map_data[y][new_room.x2 - 1] = VERTICAL_WALL
 
     connect_rooms(map_data, rooms)
     return map_data, rooms

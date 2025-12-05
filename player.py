@@ -12,7 +12,7 @@ class Player:
     def move(self, dx, dy, map_data):
         ny = self.y + dy
         nx = self.x + dx
-        if map_data[ny][nx] != WALL and map_data[ny][nx] != VOID:
+        if map_data[ny][nx] != HORIZONTAL_WALL and map_data[ny][nx] != VOID and map_data[ny][nx] != VERTICAL_WALL:
             self.x += dx
             self.y += dy
         return map_data
