@@ -1,5 +1,6 @@
 from utils import generate_rooms, connect_rooms
 from screens import start_screen, get_player_name
+import map_generator as mg
 from const import *
 import input_handler
 import os, time
@@ -8,8 +9,10 @@ from player import Player
 
 TPS = 5
 TICK_TIME = 1 / TPS
+ROOMS_ROW = 3
+ROOMS_COL = 3
 
-map_data, rooms = generate_rooms()
+map_data, rooms = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
 
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()
