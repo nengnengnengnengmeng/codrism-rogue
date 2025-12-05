@@ -7,11 +7,20 @@ class Room():
         self.x2 = x2
         self.y2 = y2
 
+def connetc_rooms(map_data, room1, room2):
+    yy = rand.randint(room1.y1, room2.y2)
+    for x in range(room1.x2, room2.x1-((room2.x1-room1.x2)//2)):
+        map_data[yy][x] = FLOOR
+    yyy = rand.randint(room2.y1, room2.y2)
+    for y in range(yy, yyy):
+        map_data[y][x] = FLOOR
+    
+
 # generate_map
 def generate_map():
     map = [[VOID for _ in range(MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
     
-    rooms = []
+    rooms = {}
     cell_w = MAP_WIDTH // 3 # 26
     cell_h = MAP_HEIGHT // 3 # 7
 
@@ -24,13 +33,13 @@ def generate_map():
             else:
                 cell_w = MAP_WIDTH // 3
 
-            room_w = rand.randint(2, cell_w - 4) # 2-22
-            room_h = rand.randint(2, cell_h - 4) # 2-3
+            room_w = rand.randint(2, cell_w - 3) # 2-23
+            room_h = rand.randint(2, cell_h - 3) # 2-4
             room_x = cell_x + rand.randint(1, cell_w - room_w - 2) # 1-21
             room_y = cell_y + rand.randint(1, cell_h - room_h - 2) # 1-2
 
             room = Room(room_x, room_y, room_x + room_w, room_y + room_h)
-            rooms.append(room)
+            rooms[(row, col)] = room
             for y in range(room.y1, room.y2):
                 for x in range(room.x1, room.x2):
                     map[y][x] = FLOOR
@@ -39,6 +48,20 @@ def generate_map():
                             if map[y+i][x+j] == VOID:
                                 map[y+i][x+j] = WALL
 
-    map[rooms[0].y1+1][rooms[0].x1+1] = PLAYER
+    map[rooms[0,0].y1+1][rooms[0,0].x1+1] = PLAYER
+    
+    hallways = []
+    for row in range(3):
+        for col in range(2):
+            hallways.append(((row, col), (row, col+1)))
+
+    for row in range(2):
+        for col in range(3):
+            hallways.append(((row, col), (row+1, col)))
+
+    for (start, end) in hallways:
+        room1 = rooms[start]
+        room2 = rooms[end]
+        connetc_rooms(map, room1, room2)
 
     return map, rooms

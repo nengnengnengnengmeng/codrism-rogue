@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 def draw(map_data, player, message):
     buffer = ""
@@ -9,7 +9,8 @@ def draw(map_data, player, message):
     for row in map_data:
         buffer += ''.join(row) + "\n"
 
-    now = datetime.now()
+    kst = timezone(timedelta(hours=9))
+    now = datetime.now(kst)
     clock = now.strftime('%I:%M')
 
     buffer += (
