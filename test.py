@@ -10,16 +10,11 @@ player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "{player_name}")
 os.system('cls')
 draw(map_data, player, "")
 
-def find_parent(room):
-    if room != parents[room]:
-        parents[room] = find_parent(parents[room])
-    return parents[room]
-
 print("\n")
 buffer = ""
 for i in range(3):
     for j in range(3):
         room = rooms[(i, j)].grid
-        buffer += f"{find_parent(room)} "
+        buffer += f"{parents[room]} "
     print(buffer)
-    buffer = ""
+    buffer = "" 

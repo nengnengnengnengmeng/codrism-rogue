@@ -41,9 +41,9 @@ while True:
     dy = 0
     for key in input_handler.pressed_keys:
         if key in MOVES:
-            mx, my = MOVES[key]
-            dx += mx
-            dy += my
+            dx, dy = MOVES[key]
+            break
+        
     player.move(dx, dy, map_data)
 
     # 화면 출력

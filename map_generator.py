@@ -11,6 +11,7 @@ class Room:
         self.grid = (row, col)
         self.door_locations = []
         self.parent = self.grid
+        self.exists = True
 
     def center(self):
         cx = (self.x1 + self.x2) // 2
@@ -37,6 +38,12 @@ class MapGenerator:
 
         self._connect_rooms()
 
+        for room in self.rooms.values():
+            self._find_parent(room.grid)
+
+        if self._isolated_exist():
+            return self.generate()
+
         return self.map_data, self.rooms, self.parents
 
     def _find_parent(self, room):
@@ -50,6 +57,11 @@ class MapGenerator:
         if current_parent != target_parent:
             self.parents[current_parent] = target_parent
 
+    def _isolated_exist(self):
+        if len(set(self.parents.values())) > 1:
+            return True
+        return False
+    
     def _place_rooms(self):
         cell_w = self.width // self.col
         cell_h = self.height // self.row
@@ -73,11 +85,21 @@ class MapGenerator:
                 room_y = cell_y + rand.randint(0, diff_h)
 
                 new_room = Room(room_x, room_y, room_w, room_h, row, col)
+
+                if rand.random() < 0.8 or (row == 0 and col == 0):
+                    new_room.exists = True
+                else:
+                    new_room.exists = False
+
                 self.rooms[(row, col)] = new_room
                 self.parents[(row, col)] = (row, col)
                 self._draw_room(new_room)
 
     def _draw_room(self, new_room):
+        if new_room.exists == False:
+            cx, cy = new_room.center()
+            self.map_data[cy][cx] = CORRIDOR
+            return
         for y in range(new_room.y1, new_room.y2):
             for x in range(new_room.x1, new_room.x2):
                 self.map_data[y][x] = FLOOR
@@ -100,7 +122,7 @@ class MapGenerator:
             for col in range(self.col):
                 current_room = self.rooms[(row, col)]
                 row, col = current_room.grid
-                if col < self.col - 1 and rand.random() < 0.6:
+                if col < self.col - 1 and rand.random() < 0.5:
                     target_room = self.rooms[(row, col + 1)]
                     door_loc_current = self._get_door_location(current_room, 'E')
                     door_loc_target = self._get_door_location(target_room, 'W')
@@ -108,7 +130,12 @@ class MapGenerator:
                     target_room.door_locations.append(door_loc_target)
                     self._change_parent(current_room.grid, target_room.grid)
                     self._draw_corridor(door_loc_current, door_loc_target, 'H')
-                if row < self.row - 1 and rand.random() < 0.6:
+                    if not target_room.exists:
+                        self._draw_corridor(door_loc_target, target_room.center(), 'H')
+                    if not current_room.exists:
+                        self._draw_corridor(current_room.center(), door_loc_target, 'H')
+                
+                if row < self.row - 1 and rand.random() < 0.5:
                     target_room = self.rooms[(row + 1, col)]
                     door_loc_current = self._get_door_location(current_room, 'S')
                     door_loc_target = self._get_door_location(target_room, 'N')
@@ -116,6 +143,10 @@ class MapGenerator:
                     target_room.door_locations.append(door_loc_target)
                     self._change_parent(current_room.grid, target_room.grid)
                     self._draw_corridor(door_loc_current, door_loc_target, 'V')
+                    if not current_room.exists:
+                        self._draw_corridor(current_room.center(), door_loc_target, 'V')
+                    if not target_room.exists:
+                        self._draw_corridor(door_loc_target, target_room.center(), 'V')
 
     def _get_door_location(self, room, direction):
         if direction == 'N':
@@ -130,7 +161,10 @@ class MapGenerator:
         elif direction == 'E':
             x = room.x2 - 1
             y = rand.randint(room.y1 + 1, room.y2 - 2)
-        self.map_data[y][x] = DOOR
+        if room.exists:
+            self.map_data[y][x] = DOOR
+        else:
+            self.map_data[y][x] = CORRIDOR
         return (x, y)
     
     def _draw_corridor(self, door1, door2, direction):
