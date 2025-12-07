@@ -1,9 +1,10 @@
 from datetime import datetime, timezone, timedelta
 from const import *
+from color import *
 
 def draw(map_data, entities, message):
     buffer = ""
-    buffer+= "\033[H"
+    buffer+= "\033[H\033[?25l"
     buffer += f"{message}\033[K\n"
     length = len(buffer)
 
@@ -12,7 +13,7 @@ def draw(map_data, entities, message):
 
     for entity in entities:
         x, y = entity.coordinate()
-        buffer = buffer[:length-1 +y*(MAP_WIDTH+1) +x+1] + entity.char + buffer[length-1 +y*(MAP_WIDTH+1) +x+2:]
+        buffer = buffer[:length + y * (MAP_WIDTH + 1) + x] + entity.char + buffer[length + y * (MAP_WIDTH + 1) + x + 1:]
 
     kst = timezone(timedelta(hours=9))
     now = datetime.now(kst)
@@ -26,4 +27,11 @@ def draw(map_data, entities, message):
         f"{' ' * 75}{clock}"
     )
 
+    buffer = buffer.replace(".",COLOR_GREEN + "." + COLOR_RESET)
+    for wall in WALLS:
+        buffer = buffer.replace(wall, COLOR_BROWN + wall + COLOR_RESET)
+    buffer = buffer.replace(DOOR, COLOR_BROWN + DOOR + COLOR_RESET)
+    buffer = buffer.replace(PLAYER, COLOR_YELLOW + PLAYER + COLOR_RESET)
+    for i in ["Level:", "Hits", "Str", "Gold", "Armor"]:
+        buffer = buffer.replace(i, COLOR_YELLOW + i)
     print(buffer, end='')
