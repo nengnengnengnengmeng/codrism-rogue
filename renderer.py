@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
 from const import *
+from entity_const import *
 from color import *
 
 def draw(map_data, entities, message):
@@ -21,9 +22,9 @@ def draw(map_data, entities, message):
 
     player = entities[0]
     buffer += (
-        f"Level:{player.level}    "
-        f"Hits:{player.hp}({player.max_hp})    "
-        f"Str:    Gold:    Armor:    \n"
+        f"Depth:12    "
+        f"HP:{player.hp}/{player.max_hp}    "
+        f"Strength:{player.strength}/{player.max_strength}    Gold:{player.gold}    Armor:{player.armor}    Rank:{RANK_TITLES[player.rank]}\n"
         f"{' ' * 75}{clock}"
     )
 
@@ -31,7 +32,7 @@ def draw(map_data, entities, message):
     for wall in WALLS:
         buffer = buffer.replace(wall, COLOR_BROWN + wall + COLOR_RESET)
     buffer = buffer.replace(DOOR, COLOR_BROWN + DOOR + COLOR_RESET)
-    buffer = buffer.replace(PLAYER, COLOR_YELLOW + PLAYER + COLOR_RESET)
-    for i in ["Level:", "Hits", "Str", "Gold", "Armor"]:
+    buffer = buffer.replace(PLAYER["char"], COLOR_YELLOW + PLAYER["char"] + COLOR_RESET)
+    for i in ["Depth", "HP", "Strength", "Gold", "Armor", "Rank"]:
         buffer = buffer.replace(i, COLOR_YELLOW + i)
     print(buffer, end='')

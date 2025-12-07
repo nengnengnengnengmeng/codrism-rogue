@@ -3,7 +3,6 @@ SCREEN_HEIGHT = 25
 MAP_HEIGHT = 22
 MAP_WIDTH = 80
 FLOOR = '.'
-PLAYER = '☺'
 VOID = ' '
 DOOR = '╬'
 CORRIDOR = '░'
@@ -23,8 +22,6 @@ WALLS = {
     VOID,
 }
 ORC = "O"
-
-PLAYER_INITIAL_HP = 12
 MOVES = {
     'w': (0, -1),
     'a': (-1, 0),
