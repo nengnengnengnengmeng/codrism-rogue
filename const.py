@@ -22,6 +22,7 @@ WALLS = {
     RIGHT_BOTTOM_WALL,
     VOID,
 }
+ORC = "O"
 
 PLAYER_INITIAL_HP = 12
 MOVES = {
