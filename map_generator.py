@@ -1,4 +1,5 @@
 from const import *
+from map_const import *
 import random as rand   
 import logging
 

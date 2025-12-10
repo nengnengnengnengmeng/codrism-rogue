@@ -1,4 +1,5 @@
 from const import *
+from map_const import *
 
 class Entity:
     def __init__(self, x, y, char, name):
