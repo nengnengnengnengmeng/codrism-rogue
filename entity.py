@@ -1,12 +1,17 @@
 from const import *
 from map_const import *
+from entity_const import *
 
 class Entity:
-    def __init__(self, x, y, char, name):
+    def __init__(self, x, y, type):
         self.x = x
         self.y = y
-        self.char = char
-        self.name = name
+        self.name = type
+        self.char = ENTITIES[type]["char"]
+        self.max_hp = ENTITIES[type]["hp"]
+        self.hp = self.max_hp
+        self.strength = ENTITIES[type]["strength"]
+        self.armor = ENTITIES[type]["armor"]
 
     def coordinate(self):
         return self.x, self.y

@@ -4,11 +4,8 @@ from entity import Entity
 
 class Player(Entity):
     def __init__(self, x, y, name):
-        super().__init__(x, y, PLAYER["char"], name)
-        self.max_hp = PLAYER["hp"]
-        self.hp = self.max_hp
-        self.max_strength = PLAYER["strength"]
-        self.strength = PLAYER["strength"]
-        self.gold = PLAYER["gold"]
-        self.armor = PLAYER["armor"]
-        self.rank = PLAYER["rank"]
+        super().__init__(x, y, "Player")
+        self.name = name
+        self.max_strength = self.strength
+        self.gold = ENTITIES["Player"]["gold"]
+        self.rank = ENTITIES["Player"]["rank"]
