@@ -6,6 +6,10 @@ RANK_TITLES = [
     ""
     ]
 
+ENTITY_CHAR = {
+    "O",    
+}
+
 ENTITIES = {
     "Player": {
         "char": "\033[1;38;5;226m☺\033[0m", 

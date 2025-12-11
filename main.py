@@ -48,7 +48,7 @@ while True:
             dx += mx
             dy += my
         
-    player.move(dx, dy, map_data)
+    player.move(dx, dy, map_data, entities)
 
     # 화면 출력
     draw(map_data, entities, message)
