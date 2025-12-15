@@ -21,8 +21,8 @@ ENTITIES = {
     },
     "Orc": {
         "char": "O",
-        "hp": 12,
-        "strength": 16,
+        "hp": 49,
+        "strength": 1,
         "armor": 0,
     }
 }

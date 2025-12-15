@@ -6,6 +6,7 @@ import os, time
 from renderer import draw
 from player import Player
 from entity import Entity
+import random as rand
 
 TPS = 8
 TICK_TIME = 1 / TPS
@@ -24,31 +25,39 @@ message = f"Hello {player.name}"
 
 # 입력 스레드 시작
 os.system('cls')
-input_handler.start_listener()
+draw(map_data, entities, message)
+#input_handler.start_listener()
 
-last_tick = time.time()
+#last_tick = time.time()
 
 while True:
-    # 틱 계산
-    now = time.time()
-    delta = now - last_tick
+    messages = []
+    message = None
+    dx, dy = input_handler.get_action()
+    message = player.move(dx, dy, map_data, entities)
+    messages.append(message)
+    message = None
 
-    if delta < TICK_TIME:
-        time.sleep(TICK_TIME - delta)
-        continue
+    for entity in entities:
+        if entity.type != "Player":
+            dx, dy = rand.choice(((0,1),(0,-1),(1,0),(-1,0),(0,0)))
+            message = entity.move(dx, dy, map_data, entities)
+            messages.append(message)
+            message = None
 
-    last_tick = now
-
-    # 입력 처리
-    dx = 0
-    dy = 0
-    for key in input_handler.pressed_keys:
-        if key in MOVES:
-            mx, my = MOVES[key]
-            dx += mx
-            dy += my
+    for entity in entities:
+        if entity.hp <= 0 and entity.type != "Player":
+            del entities[entities.index(entity)]
+            player.gold += 10
+            player.rank += 1
+            message = f"{entity.type}를 처치했다"
+            messages.append(message)
         
-    player.move(dx, dy, map_data, entities)
+        if player.hp <= 0:
+            os.system('cls')
+            print("당신은 사망했습니다")
+            time.sleep(2)
+            exit()
 
     # 화면 출력
-    draw(map_data, entities, message)
+    draw(map_data, entities, messages)

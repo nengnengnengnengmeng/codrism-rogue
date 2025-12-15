@@ -26,11 +26,11 @@ def draw(map_data, entities, message):
     player = entities[0]
 
     buffer.append(
-        f"{COLOR_YELLOW}Depth:12    "
-        f"{COLOR_YELLOW}HP:{player.hp}/{player.max_hp}    "
-        f"{COLOR_YELLOW}Strength:{player.strength}/{player.max_strength}    "
-        f"{COLOR_YELLOW}Gold:{player.gold}    "
-        f"{COLOR_YELLOW}Armor:{player.armor}    "
+        f"{COLOR_YELLOW}Depth:12  "
+        f"{COLOR_YELLOW}HP:{player.hp}/{player.max_hp}  "
+        f"{COLOR_YELLOW}Strength:{player.strength}/{player.max_strength}  "
+        f"{COLOR_YELLOW}Gold:{player.gold}  "
+        f"{COLOR_YELLOW}Armor:{player.armor}  "
         f"{COLOR_YELLOW}Rank:{RANK_TITLES[player.rank]}{COLOR_RESET}\n"
         f"{' '*75}{clock}"
     )

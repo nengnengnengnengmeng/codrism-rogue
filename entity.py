@@ -23,10 +23,11 @@ class Entity:
         next_cell = map_data[ny][nx]
         
         for entity in entities:
-            if entity.type == "Player": continue
+            if entity == self: continue
+
             if entity.x == nx and entity.y == ny:
-                self.attack(entity)
-                return
+                message = self.attack(entity)
+                return message
 
         if next_cell not in WALLS:
             self.x += dx
@@ -34,4 +35,8 @@ class Entity:
 
     def attack(self, target):
         target.hp -= self.strength
-        self.hp -= target.strength
+        message = f"{self.type}가 {target.type}를 공격했다"
+        return message
+
+    def ___del__(self):
+        pass

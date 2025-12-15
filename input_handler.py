@@ -1,3 +1,4 @@
+"""
 import threading, keyboard
 
 running = True
@@ -25,3 +26,23 @@ def start_listener():
 def stop_listener():
     global running
     running = False
+"""
+
+import keyboard
+import time
+
+def get_action():
+    while True:
+        event = keyboard.read_event()
+
+        if event.event_type == keyboard.KEY_DOWN:
+            key = event.name
+            
+            if key == 'w':
+                return (0, -1)
+            elif key == 's':
+                return (0, 1)
+            elif key == 'a':
+                return (-1, 0)
+            elif key == 'd':
+                return (1, 0)
