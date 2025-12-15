@@ -1,6 +1,7 @@
 from const import *
 from map_const import *
 from entity_const import *
+from log import log
 
 class Entity:
     def __init__(self, x, y, type):
@@ -35,8 +36,7 @@ class Entity:
 
     def attack(self, target):
         target.hp -= self.strength
-        message = f"{self.type}가 {target.type}를 공격했다"
-        return message
+        log(f"{self.type}가 {target.type}를 공격했다")
 
     def ___del__(self):
         pass

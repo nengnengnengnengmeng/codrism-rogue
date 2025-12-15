@@ -7,6 +7,7 @@ from renderer import draw
 from player import Player
 from entity import Entity
 import random as rand
+import log
 
 TPS = 8
 TICK_TIME = 1 / TPS
@@ -21,37 +22,30 @@ player_name = "Player"
 player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "player_name")
 orc_1 = Entity(rooms[1,1].x1+2, rooms[1,1].y1+2, "Orc")
 entities = [player, orc_1]
-message = f"Hello {player.name}"
 
 # 입력 스레드 시작
 os.system('cls')
-draw(map_data, entities, message)
+draw(map_data, entities, f"Hello {player_name}")
 #input_handler.start_listener()
 
 #last_tick = time.time()
 
 while True:
-    messages = []
-    message = None
+    log.initialize()
     dx, dy = input_handler.get_action()
-    message = player.move(dx, dy, map_data, entities)
-    messages.append(message)
-    message = None
+    player.move(dx, dy, map_data, entities)
 
     for entity in entities:
         if entity.type != "Player":
             dx, dy = rand.choice(((0,1),(0,-1),(1,0),(-1,0),(0,0)))
-            message = entity.move(dx, dy, map_data, entities)
-            messages.append(message)
-            message = None
+            entity.move(dx, dy, map_data, entities)
 
     for entity in entities:
         if entity.hp <= 0 and entity.type != "Player":
             del entities[entities.index(entity)]
             player.gold += 10
             player.rank += 1
-            message = f"{entity.type}를 처치했다"
-            messages.append(message)
+            log.log(f"{entity.type}를 처치했다")
         
         if player.hp <= 0:
             os.system('cls')
@@ -59,5 +53,7 @@ while True:
             time.sleep(2)
             exit()
 
+    logged_messages = log.get()
+
     # 화면 출력
-    draw(map_data, entities, messages)
+    draw(map_data, entities, logged_messages)
