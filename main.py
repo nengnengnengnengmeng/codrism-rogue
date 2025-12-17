@@ -8,6 +8,7 @@ from player import Player
 from entity import Entity
 import random as rand
 import log
+from astar import Astar
 
 ROOMS_ROW = 3
 ROOMS_COL = 3
@@ -30,8 +31,11 @@ while True:
 
     for entity in entities:
         if entity.type != "Player":
-            dx, dy = rand.choice(((0,1),(0,-1),(1,0),(-1,0),(0,0)))
-            entity.move(dx, dy, map_data, entities)
+            astar = Astar(map_data, entity, player)
+            path = astar.get_path()
+            if path:
+                nx, ny = path[0]
+            entity.move(nx - entity.x, ny - entity.y, map_data, entities)
 
     for entity in entities:
         if entity.hp <= 0 and entity.type != "Player":
