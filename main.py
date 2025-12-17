@@ -31,11 +31,13 @@ while True:
 
     for entity in entities:
         if entity.type != "Player":
-            astar = Astar(map_data, entity, player)
-            path = astar.get_path()
-            if path:
-                nx, ny = path[0]
-            entity.move(nx - entity.x, ny - entity.y, map_data, entities)
+            distance = abs(entity.x - player.x) + abs(entity.y - player.y)
+            if distance <= 10:
+                astar = Astar(map_data, entity, player)
+                path = astar.get_path()
+                if path:
+                    nx, ny = path[0]
+                entity.move(nx - entity.x, ny - entity.y, map_data, entities)
 
     for entity in entities:
         if entity.hp <= 0 and entity.type != "Player":
