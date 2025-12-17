@@ -9,8 +9,6 @@ from entity import Entity
 import random as rand
 import log
 
-TPS = 8
-TICK_TIME = 1 / TPS
 ROOMS_ROW = 3
 ROOMS_COL = 3
 
@@ -23,13 +21,8 @@ player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "player_name")
 orc_1 = Entity(rooms[1,1].x1+2, rooms[1,1].y1+2, "Orc")
 entities = [player, orc_1]
 
-# 입력 스레드 시작
 os.system('cls')
 draw(map_data, entities, f"Hello {player_name}")
-#input_handler.start_listener()
-
-#last_tick = time.time()
-
 while True:
     log.initialize()
     dx, dy = input_handler.get_action()
