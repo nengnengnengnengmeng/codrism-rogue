@@ -25,8 +25,10 @@ class Entity:
         
         for entity in entities:
             if entity == self: continue
-
+            
             if entity.x == nx and entity.y == ny:
+                if self.type != "Player" and entity.type != "Player":
+                    return
                 message = self.attack(entity)
                 return message
 

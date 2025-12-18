@@ -9,9 +9,7 @@ from entity import Entity
 import random as rand
 import log
 from astar import Astar
-
-ROOMS_ROW = 3
-ROOMS_COL = 3
+from spawner import spawn_entity
 
 map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
 
@@ -19,8 +17,10 @@ player_name = "Player"
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()
 player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "player_name")
-orc_1 = Entity(rooms[1,1].x1+2, rooms[1,1].y1+2, "Orc")
-entities = [player, orc_1]
+entities = [player]
+for _ in range(3):
+    spawn_entity(rooms, entities, "Orc", map_data)
+turn = 0
 
 os.system('cls')
 draw(map_data, entities, f"Hello {player_name}")
@@ -32,7 +32,7 @@ while True:
     for entity in entities:
         if entity.type != "Player":
             distance = abs(entity.x - player.x) + abs(entity.y - player.y)
-            if distance <= 10:
+            if distance <= 15:
                 astar = Astar(map_data, entity, player)
                 path = astar.get_path()
                 if path:
@@ -49,10 +49,18 @@ while True:
         if player.hp <= 0:
             os.system('cls')
             print("당신은 사망했습니다")
+            print(TOMBSTONE)
             time.sleep(2)
             exit()
 
     logged_messages = log.get()
+
+    if rand.random() < 0.05:
+        spawn_entity(rooms, entities, "Orc", map_data)
+
+    turn += 1
+    if turn% 5 == 0:
+        player.hp = min(player.max_hp, player.hp + 1)
 
     # 화면 출력
     draw(map_data, entities, logged_messages)
