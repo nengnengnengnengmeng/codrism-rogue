@@ -1,11 +1,12 @@
 from map_const import *
 
 class Astar:
-    def __init__(self, map_data, entity, player):
+    def __init__(self, map_data, entity, player, entities):
         self.map_data = map_data
         self.entity = entity
         self.player = player
-
+        self.entities = entities
+        
     def huristic(self, a, b):
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
@@ -14,6 +15,12 @@ class Astar:
             return False
         if self.map_data[y][x] in WALLS:
             return False
+        for entity in self.entities:
+            if entity == self.entity: continue
+            if entity == self.player: continue
+            if entity.x == x and entity.y == y and self.map_data[y][x] == FLOOR:
+                return False
+            
         return True
 
     def get_neighbors(self, current_node):

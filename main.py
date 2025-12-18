@@ -33,7 +33,7 @@ while True:
         if entity.type != "Player":
             distance = abs(entity.x - player.x) + abs(entity.y - player.y)
             if distance <= 15:
-                astar = Astar(map_data, entity, player)
+                astar = Astar(map_data, entity, player, entities)
                 path = astar.get_path()
                 if path:
                     nx, ny = path[0]
