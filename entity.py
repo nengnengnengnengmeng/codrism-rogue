@@ -2,6 +2,7 @@ from const import *
 from map_const import *
 from entity_const import *
 from log import log
+import random as rand
 
 class Entity:
     def __init__(self, x, y, type):
@@ -9,11 +10,14 @@ class Entity:
         self.y = y
         self.name = type
         self.type = type
+
         self.char = ENTITIES[type]["char"]
         self.max_hp = ENTITIES[type]["hp"]
         self.hp = self.max_hp
         self.strength = ENTITIES[type]["strength"]
         self.armor = ENTITIES[type]["armor"]
+        self.damage_dice = ENTITIES[type]["damage_dice"]
+        self.level = ENTITIES[type].get("level", 0)
 
     def coordinate(self):
         return self.x, self.y
@@ -29,16 +33,32 @@ class Entity:
             if entity.x == nx and entity.y == ny:
                 if self.type != "Player" and entity.type != "Player":
                     return
-                message = self.attack(entity)
-                return message
+                self.attack(entity)
+                return
 
         if next_cell not in WALLS:
             self.x += dx
             self.y += dy
 
+    def str_bonus(self):
+        return (self.strength - 10) // 2
+
     def attack(self, target):
-        target.hp -= self.strength
-        log(f"{self.type}가 {target.type}를 공격했다")
+        hit_roll = rand.randint(1, 20)
+        attack_bonus = self.level
+        total_hit = hit_roll + attack_bonus
+
+        if total_hit >= target.armor:
+            min_damage, max_damage = self.damage_dice
+            base_damage = rand.randint(min_damage, max_damage)
+            damage = base_damage + self.str_bonus()
+            target.hp -= damage
+
+            message = f"{self.type}가 {target.type}를 공격했다"
+            log(message)
+        else:
+            message = f"{self.type}의 공격이 빗나갔다"
+            log(message)
 
     def ___del__(self):
         pass

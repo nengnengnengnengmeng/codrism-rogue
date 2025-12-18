@@ -16,13 +16,18 @@ ENTITIES = {
         "hp": 12,
         "strength": 16,
         "gold": 0,
-        "armor": 0,
+        "armor": 10,
         "rank": 0,
+        "xp": 0,
+        "damage_dice": (1, 6),
     },
     "Orc": {
         "char": "O",
-        "hp": 49,
-        "strength": 1,
-        "armor": 0,
+        "hp": 20,
+        "strength": 12,
+        "armor": 12,
+        "xp_reward": 5,
+        "damage_dice": (1, 4),
+        "gold_reward": (2,7),
     }
 }

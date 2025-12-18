@@ -9,3 +9,4 @@ class Player(Entity):
         self.max_strength = self.strength
         self.gold = ENTITIES["Player"]["gold"]
         self.rank = ENTITIES["Player"]["rank"]
+        self.xp = ENTITIES["Player"]["xp"]
