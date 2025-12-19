@@ -27,7 +27,7 @@ ENTITIES = {
         "strength": 12,
         "armor": 12,
         "xp_reward": 5,
-        "damage_dice": (1, 4),
+        "damage_dice": (1, 2),
         "gold_reward": (2,7),
     }
 }

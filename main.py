@@ -10,6 +10,7 @@ import random as rand
 import log
 from astar import Astar
 from spawner import spawn_entity
+import random as rand
 
 map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
 
@@ -18,7 +19,7 @@ player_name = "Player"
 #player_name = get_player_name()
 player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "player_name")
 entities = [player]
-for _ in range(3):
+for _ in range(1):
     spawn_entity(rooms, entities, "Orc", map_data)
 turn = 0
 
@@ -32,12 +33,15 @@ while True:
     for entity in entities:
         if entity.type != "Player":
             distance = abs(entity.x - player.x) + abs(entity.y - player.y)
-            if distance <= 15:
+            if distance <= 15 and distance > 3:
                 astar = Astar(map_data, entity, player, entities)
                 path = astar.get_path()
                 if path:
                     nx, ny = path[0]
                 entity.move(nx - entity.x, ny - entity.y, map_data, entities)
+            elif distance <= 3 and rand.random() < 0.25:
+                dx, dy = (rand.randint(-1,2), rand.randint(-1,2))    
+                entity.move(dx, dy, map_data, entities)
 
     for entity in entities:
         if entity.hp <= 0 and entity.type != "Player":
@@ -49,13 +53,12 @@ while True:
         if player.hp <= 0:
             os.system('cls')
             print("당신은 사망했습니다")
-            print(TOMBSTONE)
             time.sleep(2)
             exit()
 
     logged_messages = log.get()
 
-    if rand.random() < 0.05:
+    if rand.random() < (SPAWN_RATE*0.01):
         spawn_entity(rooms, entities, "Orc", map_data)
 
     turn += 1
