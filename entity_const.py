@@ -25,9 +25,10 @@ ENTITIES = {
         "char": "O",
         "hp": 20,
         "strength": 12,
-        "armor": 12,
+        "armor": 8,
         "xp_reward": 5,
         "damage_dice": (1, 2),
         "gold_reward": (2,7),
+        "rank": 0,
     }
 }

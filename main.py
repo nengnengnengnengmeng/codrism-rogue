@@ -33,23 +33,22 @@ while True:
     for entity in entities:
         if entity.type != "Player":
             distance = abs(entity.x - player.x) + abs(entity.y - player.y)
-            if distance <= 15 and distance > 3:
+            if distance <= 15:
                 astar = Astar(map_data, entity, player, entities)
                 path = astar.get_path()
                 if path:
                     nx, ny = path[0]
                 dx, dy = (nx - entity.x, ny - entity.y)
-            elif distance <= 3 and rand.random() < 0.25:
-                dx, dy = (rand.randint(-1,2), rand.randint(-1,2))
-            else: dx, dy = (0, 0)
+            else: dx, dy = (0,0)
             entity.move(dx, dy, map_data, entities)
 
     for entity in entities:
         if entity.hp <= 0 and entity.type != "Player":
             del entities[entities.index(entity)]
-            player.gold += 10
-            player.rank += 1
+            player.gold += rand.randint(entity.gold_reward[0], entity.gold_reward[1])
+            player.xp += entity.xp_reward
             log.log(f"{entity.type}를 처치했다")
+            player.level_up()
         
         if player.hp <= 0:
             os.system('cls')

@@ -17,7 +17,9 @@ class Entity:
         self.strength = ENTITIES[type]["strength"]
         self.armor = ENTITIES[type]["armor"]
         self.damage_dice = ENTITIES[type]["damage_dice"]
-        self.level = ENTITIES[type].get("level", 0)
+        self.gold_reward = ENTITIES[type].get("gold_reward", 0)
+        self.xp_reward = ENTITIES[type].get("xp_reward", 0)
+        self.rank = ENTITIES[type].get("rank", 0)
 
     def coordinate(self):
         return self.x, self.y
@@ -45,7 +47,7 @@ class Entity:
 
     def attack(self, target):
         hit_roll = rand.randint(1, 20)
-        attack_bonus = self.level
+        attack_bonus = self.rank
         total_hit = hit_roll + attack_bonus
 
         if total_hit >= target.armor:
