@@ -45,6 +45,8 @@ class MapGenerator:
         if self._isolated_exist():
             return self.generate()
 
+        self._place_stair()
+
         return self.map_data, self.rooms, self.parents
 
     def _find_parent(self, room):
@@ -95,6 +97,14 @@ class MapGenerator:
                 self.rooms[(row, col)] = new_room
                 self.parents[(row, col)] = (row, col)
                 self._draw_room(new_room)
+
+    def _place_stair(self):
+        x = rand.randint(0, MAP_WIDTH-1)
+        y = rand.randint(0, MAP_HEIGHT-1)
+        if self.map_data[y][x] != '.':
+            self._place_stair()
+            return
+        self.map_data[y][x] = '>'
 
     def _draw_room(self, new_room):
         if new_room.exists == False:

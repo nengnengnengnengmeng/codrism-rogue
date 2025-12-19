@@ -62,7 +62,7 @@ while True:
         spawn_entity(rooms, entities, "Orc", map_data)
 
     turn += 1
-    if turn% 5 == 0:
+    if turn% 10 == 0:
         player.hp = min(player.max_hp, player.hp + 1)
 
     # 화면 출력
