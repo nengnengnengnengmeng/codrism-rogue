@@ -38,10 +38,11 @@ while True:
                 path = astar.get_path()
                 if path:
                     nx, ny = path[0]
-                entity.move(nx - entity.x, ny - entity.y, map_data, entities)
+                dx, dy = (nx - entity.x, ny - entity.y)
             elif distance <= 3 and rand.random() < 0.25:
-                dx, dy = (rand.randint(-1,2), rand.randint(-1,2))    
-                entity.move(dx, dy, map_data, entities)
+                dx, dy = (rand.randint(-1,2), rand.randint(-1,2))
+            else: dx, dy = (0, 0)
+            entity.move(dx, dy, map_data, entities)
 
     for entity in entities:
         if entity.hp <= 0 and entity.type != "Player":
