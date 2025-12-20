@@ -69,6 +69,8 @@ class MapGenerator:
         cell_w = self.width // self.col
         cell_h = self.height // self.row
 
+        counnter = 0
+
         for row in range(self.row):
             for col in range(self.col):
                 cell_x = col * cell_w if col < self.col - 1 else self.width - cell_w
@@ -89,14 +91,18 @@ class MapGenerator:
 
                 new_room = Room(room_x, room_y, room_w, room_h, row, col)
 
-                if rand.random() < 0.8 or (row == 0 and col == 0):
+                if rand.random() < 0.8:
                     new_room.exists = True
+                    counnter += 1
                 else:
                     new_room.exists = False
 
                 self.rooms[(row, col)] = new_room
                 self.parents[(row, col)] = (row, col)
                 self._draw_room(new_room)
+
+        if counnter == 0:
+            self._place_rooms()
 
     def _place_stair(self):
         x = rand.randint(0, MAP_WIDTH-1)

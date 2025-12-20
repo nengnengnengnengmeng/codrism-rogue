@@ -17,8 +17,13 @@ map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROO
 player_name = "Player"
 #start_screen() # 나중에 활성화
 #player_name = get_player_name()
-player = Player(rooms[0,0].x1+2, rooms[0,0].y1+2, "player_name")
+valid_rooms = [room for room in rooms.values() if room.exists]
+start_room = rand.choice(valid_rooms)
+x = rand.randint(start_room.x1 + 1, start_room.x2 - 2)
+y = rand.randint(start_room.y1 + 1, start_room.y2 - 2)
+player = Player(x, y, player_name)
 entities = [player]
+
 for _ in range(1):
     spawn_entity(rooms, entities, "Orc", map_data)
 turn = 0
@@ -42,19 +47,22 @@ while True:
             else: dx, dy = (0,0)
             entity.move(dx, dy, map_data, entities)
 
+    dead_entities = []
     for entity in entities:
-        if entity.hp <= 0 and entity.type != "Player":
-            del entities[entities.index(entity)]
+        if entity.is_dead and entity.type != "Player":
+            dead_entities.append(entity)
             player.gold += rand.randint(entity.gold_reward[0], entity.gold_reward[1])
             player.xp += entity.xp_reward
             log.log(f"{entity.type}를 처치했다")
             player.level_up()
+
+    entities = [e for e in entities if e not in dead_entities]
         
-        if player.hp <= 0:
-            os.system('cls')
-            print("당신은 사망했습니다")
-            time.sleep(2)
-            exit()
+    if player.hp <= 0:
+        os.system('cls')
+        print("당신은 사망했습니다")
+        time.sleep(2)
+        exit()
 
     logged_messages = log.get()
 

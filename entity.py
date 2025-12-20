@@ -20,6 +20,7 @@ class Entity:
         self.gold_reward = ENTITIES[type].get("gold_reward", 0)
         self.xp_reward = ENTITIES[type].get("xp_reward", 0)
         self.rank = ENTITIES[type].get("rank", 0)
+        self.is_dead = False
 
     def coordinate(self):
         return self.x, self.y
@@ -61,6 +62,9 @@ class Entity:
         else:
             message = f"{self.type}의 공격이 빗나갔다"
             log(message)
+
+        if target.hp <= 0:
+            target.is_dead = True
 
     def ___del__(self):
         pass
