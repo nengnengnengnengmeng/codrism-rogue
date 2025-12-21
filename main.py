@@ -11,6 +11,7 @@ import log
 from astar import Astar
 from spawner import spawn_entity
 import random as rand
+from fov import fov
 
 def initialize_level(depth, player=None):
     map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
@@ -40,11 +41,17 @@ def main():
     
     map_data, rooms, entities, player = initialize_level(1)
 
+    visible_tiles = set()
+    seen_tiles = set()
+
+    visible_tiles = fov(map_data, player, rooms)
+    seen_tiles.update(visible_tiles)
+
     start_time = time.time()
     turn = 0
 
     os.system('cls')
-    draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT)
+    draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT, visible_tiles, seen_tiles)
 
     while True:
         log.initialize()
@@ -55,16 +62,23 @@ def main():
         dx, dy = input_handler.get_action()
         player.move(dx, dy, map_data, entities)
 
+        visible_tiles = fov(map_data, player, rooms)
+        seen_tiles.update(visible_tiles)
+
         if map_data[player.y][player.x] == '>':
             log.log(f"지하 {player.depth+1}층으로 내려갑니다")
-            draw(map_data, entities, log.get(), remaining_time)
+            draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles)
             time.sleep(0.5)
 
             player.depth += 1
             player.hp = min(player.max_hp, player.hp + 5)
             map_data, rooms, entities, player = initialize_level(player.depth, player)
 
-            draw(map_data, entities, log.get(), remaining_time)
+            seen_tiles = set()
+            visible_tiles = fov(map_data, player, rooms)
+            seen_tiles.update(visible_tiles)
+
+            draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles)
             continue
 
         for entity in entities:
@@ -102,7 +116,7 @@ def main():
         if turn % 15 == 0:
             player.hp = min(player.max_hp, player.hp + 1)
 
-        draw(map_data, entities, log.get(), remaining_time)
+        draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles)
 
 if __name__ == "__main__":
     main()

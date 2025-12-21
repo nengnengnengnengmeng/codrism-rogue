@@ -4,7 +4,7 @@ from consts.entity_const import *
 from consts.map_const import *
 from compass import get_compass_direction
 
-def draw(map_data, entities, message, remaining_time):
+def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles):
     player = entities[0]
 
     buffer = []
@@ -14,17 +14,30 @@ def draw(map_data, entities, message, remaining_time):
     time_str = f"남은 시간: {mins:02d}분 {secs:02d}초\n"
     buffer.append(f"{time_str:}")
 
-    screen_data = [j[:] for j in map_data]
+    screen_rows = []
+    for y in range(len(map_data)):
+        row = ""
+        for x in range(len(map_data[0])):
+            char = map_data[y][x]
+            if (x, y) in visible_tiles:
+                entity_drawn = False
+                for entity in entities:
+                    if entity.x == x and entity.y == y:
+                        row += entity.char
+                        entity_drawn = True
+                        break
+                if not entity_drawn:
+                    row += COLOR_TABLE.get(char, char)
 
-    for entity in entities:
-        x, y = entity.coordinate()
-        screen_data[y][x] = entity.char
+            elif (x, y) in seen_tiles:
+                row += f"\033[38;5;240m{char}\033[0m"
 
-    for row in screen_data:
-        temp = ""
-        for char in row:
-            temp += COLOR_TABLE.get(char, char)
-        buffer.append(temp + "\n")
+            else:
+                row += " "
+
+        screen_rows.append(row)
+
+    buffer.append("\n".join(screen_rows))
 
     buffer.append(
         f"{COLOR_YELLOW}Depth:{player.depth}  "
