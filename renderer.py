@@ -3,36 +3,40 @@ from const import *
 from entity_const import *
 from map_const import *
 
-def draw(map_data, entities, message):
+def draw(map_data, entities, message, remaining_time):
+    player = entities[0]
+
+    buffer = []
+    buffer.append("\033[H\033[?25l")
+
+    mins, secs = divmod(int(max(0, remaining_time)), 60)
+    time_str = f"남은 시간: {mins:02d}분 {secs:02d}초\n"
+    buffer.append(f"{time_str:}")
+
     screen_data = [j[:] for j in map_data]
 
     for entity in entities:
         x, y = entity.coordinate()
         screen_data[y][x] = entity.char
 
-    buffer = []
-    buffer.append("\033[H\033[?25l")
-    buffer.append(f"{message}\033[K\n")
-
     for row in screen_data:
         temp = ""
         for char in row:
             temp += COLOR_TABLE.get(char, char)
         buffer.append(temp + "\n")
-            
-    kst = timezone(timedelta(hours=9))
-    now = datetime.now(kst)
-    clock = now.strftime('%I:%M')
-    player = entities[0]
 
     buffer.append(
         f"{COLOR_YELLOW}Depth:12  "
         f"{COLOR_YELLOW}HP:{player.hp}/{player.max_hp}  "
-        f"{COLOR_YELLOW}Strength:{player.strength}/{player.max_strength}  "
-        f"{COLOR_YELLOW}Gold:{player.gold}  "
-        f"{COLOR_YELLOW}Armor:{player.armor}  "
-        f"{COLOR_YELLOW}Rank:{RANK_TITLES[player.rank]}{COLOR_RESET}\n"
-        f"{' '*75}{clock}"
+        f"{COLOR_YELLOW}STR:{player.strength}/{player.max_strength}  "
+        f"{COLOR_YELLOW}$:{player.gold}  "
+        f"{COLOR_YELLOW}DEF:{player.armor}  "
+        f"{COLOR_YELLOW}RANK:{RANK_TITLES[player.rank]}{COLOR_RESET}"
     )
 
+    message = message[-(SCREEN_HEIGHT - MAP_HEIGHT - 3):]
+    for i in message:
+        buffer.append(f"\n{i}")
+
+    buffer.append("\033[J")
     print("".join(buffer), end='')

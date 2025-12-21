@@ -1,3 +1,3 @@
-mode con: cols=80 lines=25
+mode con: cols=80 lines=29
 python main.py
 pause

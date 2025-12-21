@@ -1,5 +1,5 @@
 SCREEN_WIDTH = 80
-SCREEN_HEIGHT = 25
+SCREEN_HEIGHT = 29
 MAP_HEIGHT = 22
 MAP_WIDTH = 80
 ROOMS_ROW = 3
@@ -13,3 +13,5 @@ MOVES = {
     's': (0, 1),
     'd': (1, 0)
 }
+
+TIME_LIMIT = 180

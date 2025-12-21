@@ -25,11 +25,11 @@ player = Player(x, y, player_name)
 entities = [player]
 
 for _ in range(1):
-    spawn_entity(rooms, entities, "Orc", map_data)
+    spawn_entity(rooms, entities, "Orc", map_data, start_room=start_room)
 turn = 0
-
+start_time = time.time()
 os.system('cls')
-draw(map_data, entities, f"Hello {player_name}")
+draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT)
 while True:
     log.initialize()
     dx, dy = input_handler.get_action()
@@ -73,5 +73,8 @@ while True:
     if turn% 10 == 0:
         player.hp = min(player.max_hp, player.hp + 1)
 
+    elapsed_time = time.time() - start_time
+    remaining_time = TIME_LIMIT - elapsed_time
+
     # 화면 출력
-    draw(map_data, entities, logged_messages)
+    draw(map_data, entities, logged_messages, remaining_time)
