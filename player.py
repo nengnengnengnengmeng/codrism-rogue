@@ -11,6 +11,7 @@ class Player(Entity):
         self.max_strength = self.strength
         self.gold = ENTITIES["Player"]["gold"]
         self.xp = ENTITIES["Player"]["xp"]
+        self.depth = 1
 
     def level_up(self):
         if self.xp >= 10:

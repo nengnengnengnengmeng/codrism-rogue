@@ -12,69 +12,97 @@ from astar import Astar
 from spawner import spawn_entity
 import random as rand
 
-map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
+def initialize_level(depth, player=None):
+    map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
 
-player_name = "Player"
-#start_screen() # 나중에 활성화
-#player_name = get_player_name()
-valid_rooms = [room for room in rooms.values() if room.exists]
-start_room = rand.choice(valid_rooms)
-x = rand.randint(start_room.x1 + 1, start_room.x2 - 2)
-y = rand.randint(start_room.y1 + 1, start_room.y2 - 2)
-player = Player(x, y, player_name)
-entities = [player]
+    valid_rooms = [room for room in rooms.values() if room.exists]
+    start_room = rand.choice(valid_rooms)
 
-for _ in range(1):
-    spawn_entity(rooms, entities, "Orc", map_data, start_room=start_room)
-turn = 0
-start_time = time.time()
-os.system('cls')
-draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT)
-while True:
-    log.initialize()
-    dx, dy = input_handler.get_action()
-    player.move(dx, dy, map_data, entities)
+    x = rand.randint(start_room.x1 + 1, start_room.x2 - 2)
+    y = rand.randint(start_room.y1 + 1, start_room.y2 - 2)
+                     
+    if player is None:
+        player = Player(x, y, "Player")
+    else:
+        player.x = x
+        player.y = y
 
-    for entity in entities:
-        if entity.type != "Player":
-            distance = abs(entity.x - player.x) + abs(entity.y - player.y)
-            if distance <= 15:
-                astar = Astar(map_data, entity, player, entities)
-                path = astar.get_path()
-                if path:
-                    nx, ny = path[0]
-                dx, dy = (nx - entity.x, ny - entity.y)
-            else: dx, dy = (0,0)
-            entity.move(dx, dy, map_data, entities)
+    entities = [player]
 
-    dead_entities = []
-    for entity in entities:
-        if entity.is_dead and entity.type != "Player":
-            dead_entities.append(entity)
-            player.gold += rand.randint(entity.gold_reward[0], entity.gold_reward[1])
-            player.xp += entity.xp_reward
-            log.log(f"{entity.type}를 처치했다")
-            player.level_up()
+    monster = 1 + depth
+    for _ in range(monster):
+        spawn_entity(rooms, entities, "Orc", map_data, start_room=start_room)
 
-    entities = [e for e in entities if e not in dead_entities]
+    return map_data, rooms, entities, player
+
+def main():
+    player_name = "Player"
+    
+    map_data, rooms, entities, player = initialize_level(1)
+
+    start_time = time.time()
+    turn = 0
+
+    os.system('cls')
+    draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT)
+
+    while True:
+        log.initialize()
+
+        elapsed_time = time.time() - start_time
+        remaining_time = TIME_LIMIT - elapsed_time
+
+        dx, dy = input_handler.get_action()
+        player.move(dx, dy, map_data, entities)
+
+        if map_data[player.y][player.x] == '>':
+            log.log(f"지하 {player.depth+1}층으로 내려갑니다")
+            draw(map_data, entities, log.get(), remaining_time)
+            time.sleep(0.5)
+
+            player.depth += 1
+            player.hp = min(player.max_hp, player.hp + 5)
+            map_data, rooms, entities, player = initialize_level(player.depth, player)
+
+            draw(map_data, entities, log.get(), remaining_time)
+            continue
+
+        for entity in entities:
+            if entity.type != "Player":
+                distance = abs(entity.x - player.x) + abs(entity.y - player.y)
+                if distance <= 15:
+                    astar = Astar(map_data, entity, player, entities)
+                    path = astar.get_path()
+                    if path:
+                        nx, ny = path[0]
+                    dx, dy = (nx - entity.x, ny - entity.y)
+                else: dx, dy = (0,0)
+                entity.move(dx, dy, map_data, entities)
+
+        dead_entities = []
+        for entity in entities:
+            if entity.is_dead and entity.type != "Player":
+                dead_entities.append(entity)
+                player.gold += rand.randint(entity.gold_reward[0], entity.gold_reward[1])
+                player.xp += entity.xp_reward
+                log.log(f"{entity.type}를 처치했다")
+                player.level_up()
+        entities = [e for e in entities if e not in dead_entities]
+
+        if player.hp <= 0 or remaining_time <= 0:
+            os.system('cls')
+            print("당신은 사망했습니다")
+            time.sleep(2)
+            exit()
         
-    if player.hp <= 0:
-        os.system('cls')
-        print("당신은 사망했습니다")
-        time.sleep(2)
-        exit()
+        if rand.random() < (SPAWN_RATE*0.01):
+            spawn_entity(rooms, entities, "Orc", map_data)
 
-    logged_messages = log.get()
+        turn+=1
+        if turn % 15 == 0:
+            player.hp = min(player.max_hp, player.hp + 1)
 
-    if rand.random() < (SPAWN_RATE*0.01):
-        spawn_entity(rooms, entities, "Orc", map_data)
+        draw(map_data, entities, log.get(), remaining_time)
 
-    turn += 1
-    if turn% 10 == 0:
-        player.hp = min(player.max_hp, player.hp + 1)
-
-    elapsed_time = time.time() - start_time
-    remaining_time = TIME_LIMIT - elapsed_time
-
-    # 화면 출력
-    draw(map_data, entities, logged_messages, remaining_time)
+if __name__ == "__main__":
+    main()

@@ -27,14 +27,15 @@ def draw(map_data, entities, message, remaining_time):
         buffer.append(temp + "\n")
 
     buffer.append(
-        f"{COLOR_YELLOW}Depth:12  "
+        f"{COLOR_YELLOW}Depth:{player.depth}  "
         f"{COLOR_YELLOW}HP:{player.hp}/{player.max_hp}  "
         f"{COLOR_YELLOW}STR:{player.strength}/{player.max_strength}  "
         f"{COLOR_YELLOW}DEF:{player.armor}  "
         f"{COLOR_YELLOW}$:{player.gold}  "
         f"{COLOR_YELLOW}RANK:{RANK_TITLES[player.rank]}{COLOR_RESET}  "
-        f"{COLOR_YELLOW}계단:{get_compass_direction(player, map_data)}{COLOR_RESET}\n"
+        f"{COLOR_YELLOW}목표:{get_compass_direction(player, map_data)}{COLOR_RESET}\n"
     )
+    buffer.append("\033[J")
 
     message = message[-(SCREEN_HEIGHT - MAP_HEIGHT - 3):]
     for i in message:
