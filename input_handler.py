@@ -28,21 +28,20 @@ def stop_listener():
     running = False
 """
 
-import keyboard
 import time
+import msvcrt
 
 def get_action():
-    while True:
-        event = keyboard.read_event()
+    if msvcrt.kbhit():
+        key = msvcrt.getch().lower()
 
-        if event.event_type == keyboard.KEY_DOWN:
-            key = event.name
-            
-            if key == 'w':
-                return (0, -1)
-            elif key == 's':
-                return (0, 1)
-            elif key == 'a':
-                return (-1, 0)
-            elif key == 'd':
-                return (1, 0)
+        if key == b'w':
+            return (0, -1)
+        elif key == b'a':
+            return (-1, 0)
+        elif key == b's':
+            return (0, 1)
+        elif key == b'd':
+            return (1, 0)
+        
+    return (0, 0)
