@@ -1,6 +1,6 @@
 import random as rand
 from entity import Entity
-from const import *
+from consts.const import *
 
 def spawn_entity(rooms, entities, entity_type, map_data, start_room=None):
     x = rand.randint(0, MAP_WIDTH - 1)

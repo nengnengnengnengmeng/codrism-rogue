@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
-from const import *
-from entity_const import *
-from map_const import *
+from consts.const import *
+from consts.entity_const import *
+from consts.map_const import *
 from compass import get_compass_direction
 
 def draw(map_data, entities, message, remaining_time):

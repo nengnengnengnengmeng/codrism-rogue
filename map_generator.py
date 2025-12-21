@@ -1,5 +1,5 @@
-from const import *
-from map_const import *
+from consts.const import *
+from consts.map_const import *
 import random as rand   
 import logging
 

@@ -1,4 +1,4 @@
-from map_const import *
+from consts.map_const import *
 
 class Astar:
     def __init__(self, map_data, entity, player, entities):

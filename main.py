@@ -1,6 +1,6 @@
 from screens import start_screen, get_player_name
 import map_generator as mg
-from const import *
+from consts.const import *
 import input_handler
 import os, time
 from renderer import draw

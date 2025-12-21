@@ -1,6 +1,6 @@
-from const import *
-from map_const import *
-from entity_const import *
+from consts.const import *
+from consts.map_const import *
+from consts.entity_const import *
 from log import log
 import random as rand
 

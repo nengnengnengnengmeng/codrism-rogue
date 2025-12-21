@@ -1,5 +1,5 @@
-from const import *
-from entity_const import *
+from consts.const import *
+from consts.entity_const import *
 from entity import Entity
 import log
 import random as rand

@@ -1,5 +1,5 @@
 import map_generator as mg
-from const import *
+from consts.const import *
 from renderer import draw
 from player import Player
 import os
