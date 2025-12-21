@@ -40,6 +40,7 @@ def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles)
     buffer.append("\n".join(screen_rows))
 
     buffer.append(
+        f"\033[K "
         f"{COLOR_YELLOW}Depth:{player.depth}  "
         f"{COLOR_YELLOW}HP:{player.hp}/{player.max_hp}  "
         f"{COLOR_YELLOW}STR:{player.strength}/{player.max_strength}  "
