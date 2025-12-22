@@ -21,7 +21,7 @@ def initialize_level(depth, player=None):
 
     x = rand.randint(start_room.x1 + 1, start_room.x2 - 2)
     y = rand.randint(start_room.y1 + 1, start_room.y2 - 2)
-                     
+    
     if player is None:
         player = Player(x, y, "Player")
     else:
@@ -30,7 +30,10 @@ def initialize_level(depth, player=None):
 
     entities = [player]
 
-    monster = 2 + depth
+    goalkeeper_loc = (rand.randint(stair[0] - 1, stair[0] + 1), rand.randint(stair[1] - 1, stair[1] + 1))
+    spawn_entity(rooms, entities, map_data, depth, start_room=start_room, location=goalkeeper_loc)
+
+    monster = 1 + depth
     for _ in range(monster):
         spawn_entity(rooms, entities, map_data, depth, start_room=start_room)
 
