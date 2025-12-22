@@ -31,6 +31,7 @@ class MapGenerator:
         self.map_data = []
         self.rooms = {}
         self.parents = {}
+        self.stair = None
 
     def generate(self):
         self.map_data = [[VOID for _ in range(self.width)] for _ in range(self.height)]
@@ -47,7 +48,7 @@ class MapGenerator:
 
         self._place_stair()
 
-        return self.map_data, self.rooms, self.parents
+        return self.map_data, self.rooms, self.parents, self.stair
 
     def _find_parent(self, room):
         if room != self.parents[room]:
@@ -111,6 +112,7 @@ class MapGenerator:
             self._place_stair()
             return
         self.map_data[y][x] = '>'
+        self.stair = (x, y)
 
     def _draw_room(self, new_room):
         if new_room.exists == False:

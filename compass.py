@@ -1,12 +1,7 @@
 import math
 
-def get_compass_direction(player, map_data):
-    for y, row in enumerate(map_data):
-        if '>' in row:
-            stair_pos = (row.index('>'), y)
-            break
-
-    x, y = stair_pos
+def get_compass_direction(player, stair):
+    x, y = stair
     px, py = player.x, player.y
     dx = x - px
     dy = py - y

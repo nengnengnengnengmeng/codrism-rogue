@@ -65,6 +65,3 @@ class Entity:
 
         if target.hp <= 0:
             target.is_dead = True
-
-    def ___del__(self):
-        pass

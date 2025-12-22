@@ -4,7 +4,7 @@ from consts.entity_const import *
 from consts.map_const import *
 from compass import get_compass_direction
 
-def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles):
+def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles, stair):
     player = entities[0]
 
     buffer = []
@@ -47,7 +47,7 @@ def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles)
         f"{COLOR_YELLOW}DEF:{player.armor}  "
         f"{COLOR_YELLOW}$:{player.gold}  "
         f"{COLOR_YELLOW}RANK:{RANK_TITLES[player.rank]}{COLOR_RESET}  "
-        f"{COLOR_YELLOW}목표:{get_compass_direction(player, map_data)}{COLOR_RESET}\n"
+        f"{COLOR_YELLOW}목표:{get_compass_direction(player, stair)}{COLOR_RESET}"
     )
     buffer.append("\033[J")
 

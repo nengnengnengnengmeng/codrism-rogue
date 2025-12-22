@@ -7,7 +7,7 @@ def fov(map_data, player, rooms):
     for dy in range(-2, 3):
         for dx in range(-2, 3):
             nx, ny = player.x + dx, player.y + dy
-            if 0 <= nx < MAP_WIDTH and 0 <= ny < MAP_HEIGHT and map_data[ny][nx] is not FLOOR:
+            if 0 <= nx < MAP_WIDTH and 0 <= ny < MAP_HEIGHT and map_data[ny][nx] != FLOOR:
                 visible_tiles.add((nx, ny))
 
     current_room = None

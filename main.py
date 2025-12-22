@@ -14,7 +14,7 @@ import random as rand
 from fov import fov
 
 def initialize_level(depth, player=None):
-    map_data, rooms, parents = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
+    map_data, rooms, parents, stair = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
 
     valid_rooms = [room for room in rooms.values() if room.exists]
     start_room = rand.choice(valid_rooms)
@@ -34,12 +34,12 @@ def initialize_level(depth, player=None):
     for _ in range(monster):
         spawn_entity(rooms, entities, "Orc", map_data, start_room=start_room)
 
-    return map_data, rooms, entities, player
+    return map_data, rooms, entities, player, stair
 
 def main():
     player_name = "Player"
     
-    map_data, rooms, entities, player = initialize_level(1)
+    map_data, rooms, entities, player, stair = initialize_level(1)
 
     visible_tiles = set()
     seen_tiles = set()
@@ -51,7 +51,7 @@ def main():
     turn = 0
 
     os.system('cls')
-    draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT, visible_tiles, seen_tiles)
+    draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT, visible_tiles, seen_tiles, stair)
 
     while True:
         elapsed_time = time.time() - start_time
@@ -69,18 +69,18 @@ def main():
 
             if map_data[player.y][player.x] == '>':
                 log.log(f"지하 {player.depth+1}층으로 내려갑니다")
-                draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles)
+                draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
                 time.sleep(0.5)
 
                 player.depth += 1
                 player.hp = min(player.max_hp, player.hp + 5)
-                map_data, rooms, entities, player = initialize_level(player.depth, player)
+                map_data, rooms, entities, player, stair = initialize_level(player.depth, player)
 
                 seen_tiles = set()
                 visible_tiles = fov(map_data, player, rooms)
                 seen_tiles.update(visible_tiles)
 
-                draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles)
+                draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
                 continue
 
             for entity in entities:
@@ -118,7 +118,7 @@ def main():
                 time.sleep(2)
                 exit()
 
-        draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles)
+        draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
 
 if __name__ == "__main__":
     main()
