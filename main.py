@@ -1,5 +1,6 @@
 import os
 import time
+import msvcrt
 import random as rand
 
 from consts.const import *
@@ -71,6 +72,48 @@ def main():
             seen_tiles.update(visible_tiles)
 
             if map_data[player.y][player.x] == '>':
+                pause_time = time.time()
+                os.system('cls')
+
+                mins, secs = divmod(int(max(0, remaining_time)), 60)
+                time_str = f"남은 시간: {mins:02d}분 {secs:02d}초\n"
+                
+                print(f"지하 {player.depth}층을 클리어했습니다")
+                print(f"현재 배율: {MULTIPLIERS.get(player.depth, 1)}")
+                print(f"다음 배율: {MULTIPLIERS.get(player.depth + 1, 1)}")
+                print(f"{time_str}")
+                if player.depth == 1: print("\n[1] 원금만 찾고 나가기")
+                else: print("[1] 익절하고 나가기")
+                print(f"[2] 지하 {player.depth+1}층 도전하기")
+
+                while True:
+                    key = msvcrt.getch()
+
+                    if key == b'1':
+                        os.system('cls')
+                        print(f"{MULTIPLIERS.get(player.depth, 1)}")
+                        time.sleep(3)
+                        exit()
+
+                    elif key == b'2':
+                        pause_time2 = time.time() - pause_time
+                        start_time += pause_time2
+
+                        log.log(f"지하 {player.depth+1}층으로 내려갑니다")
+                        player.depth += 1
+                        player.hp = min(player.max_hp, player.hp + 5)
+                        map_data, rooms, entities, player, stair = initialize_level(player.depth, player)
+
+                        seen_tiles = set()
+                        visible_tiles = fov(map_data, player, rooms)
+                        seen_tiles.update(visible_tiles)
+
+                        renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
+                        break
+
+                continue
+
+                """
                 log.log(f"지하 {player.depth+1}층으로 내려갑니다")
                 renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
                 time.sleep(0.5)
@@ -85,7 +128,7 @@ def main():
 
                 renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
                 continue
-
+                """
             for entity in entities:
                 if entity.type != "Player":
                     distance = abs(entity.x - player.x) + abs(entity.y - player.y)
