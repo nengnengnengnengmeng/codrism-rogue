@@ -14,19 +14,16 @@ def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles,
     time_str = f"남은 시간: {mins:02d}분 {secs:02d}초\n"
     buffer.append(f"{time_str:}")
 
+    entities2 = {(entity.x, entity.y): entity for entity in entities}
     screen_rows = []
     for y in range(len(map_data)):
         row = ""
         for x in range(len(map_data[0])):
             char = map_data[y][x]
             if (x, y) in visible_tiles:
-                entity_drawn = False
-                for entity in entities:
-                    if entity.x == x and entity.y == y:
-                        row += entity.char
-                        entity_drawn = True
-                        break
-                if not entity_drawn:
+                if (x, y) in entities2:
+                    row += entities2[(x, y)].char
+                else:
                     row += COLOR_TABLE.get(char, char)
 
             elif (x, y) in seen_tiles:
