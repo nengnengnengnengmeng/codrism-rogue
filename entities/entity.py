@@ -48,7 +48,7 @@ class Entity:
 
     def attack(self, target):
         hit_roll = rand.randint(1, 20)
-        attack_bonus = self.rank
+        attack_bonus = self.rank * 1.5
         total_hit = hit_roll + attack_bonus
 
         if total_hit >= target.armor:

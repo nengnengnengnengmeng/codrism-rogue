@@ -30,9 +30,9 @@ def initialize_level(depth, player=None):
 
     entities = [player]
 
-    monster = 1 + depth
+    monster = 2 + depth
     for _ in range(monster):
-        spawn_entity(rooms, entities, "Orc", map_data, start_room=start_room)
+        spawn_entity(rooms, entities, map_data, depth, start_room=start_room)
 
     return map_data, rooms, entities, player, stair
 
@@ -96,7 +96,7 @@ def main():
                     entity.move(dx, dy, map_data, entities)
 
             if rand.random() < (SPAWN_RATE*0.01):
-                spawn_entity(rooms, entities, "Orc", map_data)
+                spawn_entity(rooms, entities, map_data, player.depth)
 
             turn+=1
             if turn % 15 == 0:
