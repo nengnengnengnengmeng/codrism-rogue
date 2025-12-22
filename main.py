@@ -113,22 +113,6 @@ def main():
 
                 continue
 
-                """
-                log.log(f"지하 {player.depth+1}층으로 내려갑니다")
-                renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
-                time.sleep(0.5)
-
-                player.depth += 1
-                player.hp = min(player.max_hp, player.hp + 5)
-                map_data, rooms, entities, player, stair = initialize_level(player.depth, player)
-
-                seen_tiles = set()
-                visible_tiles = fov(map_data, player, rooms)
-                seen_tiles.update(visible_tiles)
-
-                renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
-                continue
-                """
             for entity in entities:
                 if entity.type != "Player":
                     distance = abs(entity.x - player.x) + abs(entity.y - player.y)
@@ -160,7 +144,13 @@ def main():
 
             if player.hp <= 0 or remaining_time <= 0:
                 os.system('cls')
-                print("당신은 사망했습니다")
+                if remaining_time <= 0:
+                    print("시간 초과")
+                    multip = MULTIPLIERS.get(player.depth, 1)
+                else:
+                    print("당신은 사망했습니다")
+                    multip = 0
+                print(f"보상: {multip}배")
                 time.sleep(2)
                 exit()
 
