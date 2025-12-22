@@ -1,5 +1,5 @@
 import random as rand
-from entity import Entity
+from entities.entity import Entity
 from consts.const import *
 
 def spawn_entity(rooms, entities, entity_type, map_data, start_room=None):

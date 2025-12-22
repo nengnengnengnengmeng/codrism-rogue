@@ -1,7 +1,6 @@
 from consts.const import *
 from consts.map_const import *
 import random as rand   
-import logging
 
 class Room:
     def __init__(self, x, y, w, h, row, col):

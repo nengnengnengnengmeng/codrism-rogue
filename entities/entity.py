@@ -1,7 +1,7 @@
 from consts.const import *
 from consts.map_const import *
 from consts.entity_const import *
-from log import log
+from utils.log import log
 import random as rand
 
 class Entity:

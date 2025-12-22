@@ -1,17 +1,17 @@
-from screens import start_screen, get_player_name
-import map_generator as mg
+import os
+import time
+import random as rand
+
 from consts.const import *
-import input_handler
-import os, time
-from renderer import draw
-from player import Player
-from entity import Entity
-import random as rand
-import log
-from astar import Astar
-from spawner import spawn_entity
-import random as rand
-from fov import fov
+from entities.player import Player
+import game.input_handler as input_handler
+import map.map_generator as mg
+from map.spawner import spawn_entity
+import screen.renderer as renderer
+import screen.screens as screens
+from utils.astar import Astar
+from utils.fov import fov
+import utils.log as log
 
 def initialize_level(depth, player=None):
     map_data, rooms, parents, stair = mg.MapGenerator(MAP_WIDTH, MAP_HEIGHT, ROOMS_ROW, ROOMS_COL).generate()
@@ -51,7 +51,7 @@ def main():
     turn = 0
 
     os.system('cls')
-    draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT, visible_tiles, seen_tiles, stair)
+    renderer.draw(map_data, entities, [f"Hello {player_name}"], TIME_LIMIT, visible_tiles, seen_tiles, stair)
 
     while True:
         elapsed_time = time.time() - start_time
@@ -69,7 +69,7 @@ def main():
 
             if map_data[player.y][player.x] == '>':
                 log.log(f"지하 {player.depth+1}층으로 내려갑니다")
-                draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
+                renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
                 time.sleep(0.5)
 
                 player.depth += 1
@@ -80,7 +80,7 @@ def main():
                 visible_tiles = fov(map_data, player, rooms)
                 seen_tiles.update(visible_tiles)
 
-                draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
+                renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
                 continue
 
             for entity in entities:
@@ -118,7 +118,7 @@ def main():
                 time.sleep(2)
                 exit()
 
-        draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
+        renderer.draw(map_data, entities, log.get(), remaining_time, visible_tiles, seen_tiles, stair)
 
 if __name__ == "__main__":
     main()

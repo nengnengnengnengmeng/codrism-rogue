@@ -1,7 +1,7 @@
-import map_generator as mg
+import map.map_generator as mg
 from consts.const import *
-from renderer import draw
-from player import Player
+from screen.renderer import draw
+from entities.player import Player
 import os
 ROOMS_ROW = 3
 ROOMS_COL = 3

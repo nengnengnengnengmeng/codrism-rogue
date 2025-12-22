@@ -1,7 +1,7 @@
 from consts.const import *
 from consts.entity_const import *
-from entity import Entity
-import log
+from entities.entity import Entity
+import utils.log as log
 import random as rand
 
 class Player(Entity):
