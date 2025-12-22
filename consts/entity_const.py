@@ -3,7 +3,8 @@ RANK_TITLES = [
     "Guild Novice",
     "Apprentice",
     "Journeyman",
-    ""
+    "Adventerer",
+
     ]
 
 ENTITY_CHAR = {
@@ -55,6 +56,28 @@ ENTITIES = {
         "rank": 2,
     },
 
+    "Emu": {
+        "char": "E",
+        "hp": 15,
+        "strength": 12,
+        "armor": 10,
+        "xp_reward": 5,
+        "damage_dice": (1, 6),
+        "gold_reward": (3,6),
+        "rank": 3,
+    },
+
+    "Slime": {
+        "char": "S",
+        "hp": 15,
+        "strength": 12,
+        "armor": 10,
+        "xp_reward": 5,
+        "damage_dice": (1, 6),
+        "gold_reward": (3,6),
+        "rank": 4,
+    },
+
     "Orc": {
         "char": "O",
         "hp": 12,
@@ -63,13 +86,40 @@ ENTITIES = {
         "xp_reward": 5,
         "damage_dice": (1, 6),
         "gold_reward": (3,8),
-        "rank": 9,
-    }
+        "rank": 5,
+    },
+
+        "Rattlesnake": {
+        "char": "R",
+        "hp": 12,
+        "strength": 12,
+        "armor": 10,
+        "xp_reward": 5,
+        "damage_dice": (1, 6),
+        "gold_reward": (3,8),
+        "rank": 5,
+    },
+
+        "Centaur": {
+        "char": "C",
+        "hp": 12,
+        "strength": 12,
+        "armor": 10,
+        "xp_reward": 5,
+        "damage_dice": (1, 6),
+        "gold_reward": (3,8),
+        "rank": 5,
+    },
+
 }
 
 ENTITY_RANK = [
     "Kestral",
     "Bat",
     "Ice monster",
+    "Emu",
+    "Slime",
     "Orc",
+    "Rattlesnake",
+    "Centaur",
 ]
