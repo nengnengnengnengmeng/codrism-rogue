@@ -3,7 +3,7 @@ from consts.entity_const import *
 from consts.map_const import *
 from utils.compass import get_compass_direction
 
-def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles, stair):
+def draw(map_data, entities, items, message, remaining_time, visible_tiles, seen_tiles, stair):
     player = entities[0]
 
     buffer = []
@@ -14,6 +14,8 @@ def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles,
     buffer.append(f"{time_str:}")
 
     entities2 = {(entity.x, entity.y): entity for entity in entities}
+    items2 = {(item.x, item.y): item for item in items}
+
     screen_rows = []
     for y in range(len(map_data)):
         row = ""
@@ -22,6 +24,8 @@ def draw(map_data, entities, message, remaining_time, visible_tiles, seen_tiles,
             if (x, y) in visible_tiles:
                 if (x, y) in entities2:
                     row += entities2[(x, y)].char
+                elif (x, y) in items2:
+                    row += items2[(x, y)].char
                 else:
                     row += COLOR_TABLE.get(char, char)
 

@@ -113,6 +113,17 @@ ENTITIES = {
 
 }
 
+ITEMS = {
+    "Health Potion": {
+        "char": "!",
+        "effect_value": 10,
+    },
+    "Strength Potion": {
+        "char": "!",
+        "effect_value": 3
+    }
+}
+
 ENTITY_RANK = [
     "Kestral",
     "Bat",

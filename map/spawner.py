@@ -1,5 +1,6 @@
 import random as rand
 from entities.entity import Entity
+from entities.item import Item
 from consts.const import *
 from consts.entity_const import *
 
@@ -20,3 +21,20 @@ def spawn_entity(rooms, entities, map_data, depth, start_room=None, location=Non
             return
     new_entity = Entity(x, y, entity_type)
     entities.append(new_entity)
+
+def spawn_item(rooms, items, map_data):
+    x = rand.randint(0, MAP_WIDTH - 1)
+    y = rand.randint(0, MAP_HEIGHT - 1)
+
+    if map_data[y][x] != "." or any(i.x == x and i.y == y for i in items):
+        spawn_item(rooms, items, map_data)
+        return
+    
+    if rand.random() < 0.85:
+        item_type = "Health Potion"
+    else:
+        item_type = "Strength Potion"
+
+    new_item = Item(x, y, item_type)
+    items.append(new_item)
+    return
