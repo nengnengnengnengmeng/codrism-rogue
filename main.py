@@ -177,6 +177,7 @@ def main():
                             if (0 <= nx < MAP_WIDTH and 0 <= ny < MAP_HEIGHT and map_data[ny][nx] == '.' and not any(e.x == nx and e.y == ny for e in entities)):
                                 baby.append(Entity(nx, ny, "Mini Slime"))
                                 spawn_second = True
+                                break
 
                         if not spawn_second:
                             baby.append(Entity(entity.x, entity.y, "Mini Slime"))
