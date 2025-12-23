@@ -15,6 +15,7 @@ import screen.renderer as renderer
 import screen.screens as screens
 from utils.astar import Astar
 from utils.fov import fov
+import utils.leaderboard as lb
 import utils.log as log
 
 def initialize_level(depth, player=None):
@@ -51,7 +52,7 @@ def initialize_level(depth, player=None):
     return map_data, rooms, entities, items, player, stair, astar
 
 def main():
-    player_name = "Player"
+    player_name = screens.get_player_name()
     
     map_data, rooms, entities, items, player, stair, astar = initialize_level(1)
 
@@ -65,7 +66,9 @@ def main():
     turn = 0
 
     os.system('cls')
-    renderer.draw(map_data, entities, items,[f"Hello {player_name}"], TIME_LIMIT, visible_tiles, seen_tiles, stair)
+    log.log(f"Hello {player_name}")
+
+    renderer.draw(map_data, entities, items,log.get(), TIME_LIMIT, visible_tiles, seen_tiles, stair)
 
     while True:
         elapsed_time = time.time() - start_time
@@ -88,6 +91,14 @@ def main():
                 mins, secs = divmod(int(max(0, remaining_time)), 60)
                 time_str = f"남은 시간: {mins:02d}분 {secs:02d}초\n"
                 
+                if player.depth == 7:
+                    lb.update(player_name, player.depth, player.gold, remaining_time)
+                    print("클리어")
+                    print(f"보상: {MULTIPLIERS.get(player.depth, 1)}배")
+                    lb.show()
+                    time.sleep(2)
+                    exit()
+
                 print(f"지하 {player.depth}층을 클리어했습니다")
                 print(f"현재 배율: {MULTIPLIERS.get(player.depth, 1)}")
                 print(f"다음 배율: {MULTIPLIERS.get(player.depth + 1, 1)}")
@@ -101,7 +112,10 @@ def main():
 
                     if key == b'1':
                         os.system('cls')
-                        print(f"{MULTIPLIERS.get(player.depth, 1)}")
+                        lb.update(player_name, player.depth, player.gold, remaining_time)
+                        print("탈출")
+                        print(f"보상: {MULTIPLIERS.get(player.depth, 1)}배")
+                        lb.show()
                         time.sleep(3)
                         exit()
 
@@ -183,13 +197,15 @@ def main():
 
             if player.hp <= 0 or remaining_time <= 0:
                 os.system('cls')
+                lb.update(player_name, player.depth, player.gold, remaining_time)
                 if remaining_time <= 0:
                     print("시간 초과")
                     multip = MULTIPLIERS.get(player.depth, 1)
                 else:
-                    print("당신은 사망했습니다")
+                    print("사망")
                     multip = 0
                 print(f"보상: {multip}배")
+                lb.show()
                 time.sleep(2)
                 exit()
 

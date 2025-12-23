@@ -16,7 +16,7 @@ class Player(Entity):
     def level_up(self):
         if self.xp >= (self.rank + 1) * 10 and self.rank < 7:
             self.rank+= 1
-            self.xp -= (self.rank + 1) * 20
+            self.xp -= (self.rank + 1) * 10
 
             hp = rand.randint(2,5)
             self.max_hp += hp

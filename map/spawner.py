@@ -5,7 +5,8 @@ from consts.const import *
 from consts.entity_const import *
 
 def spawn_entity(rooms, entities, map_data, depth, start_room=None, location=None):
-    entity_types = [max(0, depth - 2), depth - 1, depth]
+    max_index = len(ENTITY_RANK)-1
+    entity_types = [min(max_index, max(0, depth - 2)), min(max_index, depth - 1), min(max_index, depth)]
     entity_type = f"{ENTITY_RANK[rand.choice(entity_types)]}"
     if not location:
         x = rand.randint(0, MAP_WIDTH - 1)
