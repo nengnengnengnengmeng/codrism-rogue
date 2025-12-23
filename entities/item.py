@@ -7,12 +7,14 @@ class Item:
         self.y = y
         self.type = type
 
-        self.char = "\033[31m" + ITEMS[type]["char"] + "\033[0m"
+        self.char = ITEMS[type]["char"]
         self.get_collected = False
         
     def use(self, target):
         effect_value = ITEMS[self.type]["effect_value"]
 
-        if self.type == "Health Potion": target.hp += effect_value
+        if self.type == "Health Potion": target.hp = min(target.max_hp, target.hp + effect_value)
 
-        if self.type == "Strength Potion": target.strength += effect_value
+        if self.type == "Strength Potion": 
+            target.max_strength += effect_value
+            target.strength += effect_value

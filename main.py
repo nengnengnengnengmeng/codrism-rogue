@@ -4,8 +4,10 @@ import msvcrt
 import random as rand
 
 from consts.const import *
+from consts.map_const import *
 from entities.player import Player
 from entities.item import Item
+from entities.entity import Entity
 import game.input_handler as input_handler
 import map.map_generator as mg
 from map.spawner import spawn_entity, spawn_item
@@ -145,14 +147,33 @@ def main():
                 player.hp = min(player.max_hp, player.hp + 1)
 
             dead_entities = []
+            baby = []
             for entity in entities:
                 if entity.is_dead and entity.type != "Player":
                     dead_entities.append(entity)
+
+                    if entity.type == "Slime":
+                        log.log(f"슬라임이 둘로 쪼개졌다")
+                        baby.append(Entity(entity.x, entity.y, "Mini Slime"))
+
+                        spawn_second = False
+                        for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]:
+                            nx, ny = entity.x + dx, entity.y + dy
+
+                            if (0 <= nx < MAP_WIDTH and 0 <= ny < MAP_HEIGHT and map_data[ny][nx] == '.' and not any(e.x == nx and e.y == ny for e in entities)):
+                                baby.append(Entity(nx, ny, "Mini Slime"))
+                                spawn_second = True
+
+                        if not spawn_second:
+                            baby.append(Entity(entity.x, entity.y, "Mini Slime"))
+
                     player.gold += rand.randint(entity.gold_reward[0], entity.gold_reward[1])
                     player.xp += entity.xp_reward
                     log.log(f"{entity.type}를 처치했다")
                     player.level_up()
+
             entities = [e for e in entities if e not in dead_entities]
+            entities.extend(baby)
 
             collected_items = []
             for item in items:

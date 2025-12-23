@@ -16,10 +16,10 @@ class Player(Entity):
     def level_up(self):
         if self.xp >= (self.rank + 1) * 10:
             self.rank+= 1
-            self.xp -= (self.rank + 1) * 10
+            self.xp -= (self.rank + 1) * 20
 
-            hp = rand.randint(3,6)
+            hp = rand.randint(2,5)
             self.max_hp += hp
-            self.hp += hp
+            self.hp = min(self.max_hp, self.hp + 10)
             
             log.log(f"{RANK_TITLES[self.rank]}로 랭크업")
