@@ -54,7 +54,7 @@ class Entity:
         if total_hit >= target.armor:
             min_damage, max_damage = self.damage_dice
             base_damage = rand.randint(min_damage, max_damage)
-            damage = base_damage + self.str_bonus()
+            damage = max(0, base_damage + self.str_bonus())
             target.hp -= damage
 
             message = f"{self.type}가 {target.type}를 공격했다"
