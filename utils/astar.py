@@ -17,7 +17,7 @@ class Astar:
         for entity in self.entities:
             if entity == start: continue
             if entity == self.player: continue
-            if entity.x == x and entity.y == y and self.map_data[y][x] == FLOOR:
+            if entity.x == x and entity.y == y and self.map_data[y][x] == FLOOR and self.map_data[start.y][start.x] == FLOOR:
                 return False
             
         return True
