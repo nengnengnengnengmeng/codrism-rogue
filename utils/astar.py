@@ -1,29 +1,28 @@
 from consts.map_const import *
 
 class Astar:
-    def __init__(self, map_data, entity, player, entities):
+    def __init__(self, map_data, player, entities):
         self.map_data = map_data
-        self.entity = entity
         self.player = player
         self.entities = entities
         
     def huristic(self, a, b):
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-    def if_walkable(self, x, y):
+    def if_walkable(self, x, y, start):
         if x < 0 or y < 0 or x >= len(self.map_data[0]) or y >= len(self.map_data):
             return False
         if self.map_data[y][x] in WALLS:
             return False
         for entity in self.entities:
-            if entity == self.entity: continue
+            if entity == start: continue
             if entity == self.player: continue
             if entity.x == x and entity.y == y and self.map_data[y][x] == FLOOR:
                 return False
             
         return True
 
-    def get_neighbors(self, current_node):
+    def get_neighbors(self, current_node, start):
         neighbors = []
         current_x, current_y = current_node[2], current_node[3]
         current_g = current_node[1]
@@ -38,18 +37,18 @@ class Astar:
                 g = current_g + 1
                 f = g + h
                 new_node = (f, g, nx, ny, (current_x, current_y))
-                if self.if_walkable(nx, ny):
+                if self.if_walkable(nx, ny, start):
                     neighbors.append(new_node)
 
         return neighbors
 
-    def get_path(self):
+    def get_path(self, start):
         open_list = []
         closed_list = set()
         parents = {}
 
         # f, g, x, y, parent
-        start_node = (0, 0, self.entity.x, self.entity.y, None)
+        start_node = (0, 0, start.x, start.y, None)
         open_list.append(start_node)
 
         while open_list:
@@ -71,7 +70,7 @@ class Astar:
                 path.reverse()
                 return path[1:]
             
-            neighbors = self.get_neighbors(current_node)
+            neighbors = self.get_neighbors(current_node, start)
 
             for neighbor in neighbors:
                 neighbor_x, neighbor_y = neighbor[2], neighbor[3]

@@ -38,12 +38,14 @@ def initialize_level(depth, player=None):
     for _ in range(monster):
         spawn_entity(rooms, entities, map_data, depth, start_room=start_room)
 
-    return map_data, rooms, entities, player, stair
+    astar = Astar(map_data, player, entities)
+
+    return map_data, rooms, entities, player, stair, astar
 
 def main():
     player_name = "Player"
     
-    map_data, rooms, entities, player, stair = initialize_level(1)
+    map_data, rooms, entities, player, stair, astar = initialize_level(1)
 
     visible_tiles = set()
     seen_tiles = set()
@@ -102,7 +104,7 @@ def main():
                         log.log(f"지하 {player.depth+1}층으로 내려갑니다")
                         player.depth += 1
                         player.hp = min(player.max_hp, player.hp + 5)
-                        map_data, rooms, entities, player, stair = initialize_level(player.depth, player)
+                        map_data, rooms, entities, player, stair, astar = initialize_level(player.depth, player)
 
                         seen_tiles = set()
                         visible_tiles = fov(map_data, player, rooms)
@@ -117,8 +119,7 @@ def main():
                 if entity.type != "Player":
                     distance = abs(entity.x - player.x) + abs(entity.y - player.y)
                     if distance <= 15:
-                        astar = Astar(map_data, entity, player, entities)
-                        path = astar.get_path()
+                        path = astar.get_path(entity)
                         if path:
                             nx, ny = path[0]
                             dx, dy = (nx - entity.x, ny - entity.y)
