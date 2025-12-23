@@ -14,7 +14,7 @@ class Player(Entity):
         self.depth = 1
 
     def level_up(self):
-        if self.xp >= (self.rank + 1) * 10:
+        if self.xp >= (self.rank + 1) * 10 and self.rank < 7:
             self.rank+= 1
             self.xp -= (self.rank + 1) * 20
 

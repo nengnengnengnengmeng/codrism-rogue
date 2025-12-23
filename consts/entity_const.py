@@ -4,7 +4,9 @@ RANK_TITLES = [
     "Apprentice",
     "Journeyman",
     "Adventerer",
-
+    "Fighter",
+    "Warrior",
+    "Rogue",
     ]
 
 ENTITY_CHAR = {
